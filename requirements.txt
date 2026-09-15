@@ -1,0 +1,17 @@
+# Taylor Laboratuvarı — Python bağımlılıkları
+# Kurulum:  python -m pip install -r requirements.txt
+#
+# Aşağıdaki sürümler bu projenin geliştirildiği ve TÜM betiklerin
+# çalıştırılıp doğrulandığı sürümlerdir (Python 3.13.7, Windows 11).
+
+manim==0.19.0
+numpy==2.3.5
+scipy==1.16.3
+sympy==1.14.0
+matplotlib==3.10.7
+mpmath==1.3.0
+jupyterlab==4.5.0
+
+# Manim'in sistem düzeyi bağımlılıkları (pip ile gelmez):
+#   ffmpeg        -> winget install Gyan.FFmpeg
+#   LaTeX dağıtımı -> winget install MiKTeX.MiKTeX   (veya TeX Live)

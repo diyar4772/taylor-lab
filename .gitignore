@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Manim ara çıktıları (nihai dosyalar out/ altına kopyalanır)
+01-manim/media/
+media/
+*.log
+
+# LaTeX ara dosyaları
+*.aux
+*.out
+*.toc
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.bbl
+*.blg
+
+# Lean
+04-lean/.lake/
+04-lean/lake-packages/
+04-lean/build/
+
+# Godot
+05-godot/.godot/
+05-godot/android/
+
+# Octave
+octave-workspace
+
+# İşletim sistemi
+Thumbs.db
+desktop.ini
+.DS_Store
