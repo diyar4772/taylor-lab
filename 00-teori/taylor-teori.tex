@@ -1,0 +1,610 @@
+% Taylor ve Maclaurin Serileri — teorik metin
+% Derleme:  pdflatex -interaction=nonstopmode taylor-teori.tex   (iki kez)
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[turkish]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\geometry{margin=2.6cm}
+
+\definecolor{vurgu}{HTML}{1B5E8C}
+\definecolor{uyari}{HTML}{A03030}
+
+\theoremstyle{plain}
+\newtheorem{teorem}{Teorem}[section]
+\newtheorem{onerme}[teorem]{Önerme}
+\newtheorem{sonuc}[teorem]{Sonuç}
+\newtheorem{lemma}[teorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{tanim}[teorem]{Tanım}
+\newtheorem{ornek}[teorem]{Örnek}
+\theoremstyle{remark}
+\newtheorem*{not}{Not}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+
+\title{\textbf{Taylor ve Maclaurin Serileri}\\[0.4em]
+\large Katsayıların zorunluluğundan kuantizasyonun doğuşuna}
+\author{Taylor Laboratuvarı}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Bu metin Taylor açılımını bir hesap tekniği olarak değil, bir \emph{zorunluluk
+zinciri} olarak ele alır. Katsayılardaki $n!$ çarpanının neden kaçınılmaz
+olduğundan başlanır; Taylor polinomu ile Taylor serisi arasındaki kritik ayrım
+Lagrange kalanı üzerinden kurulur; yakınsaklık yarıçapının reel eksende değil
+kompleks düzlemde belirlendiği gösterilir; pürüzsüz ama analitik olmayan
+fonksiyonlarla $C^\omega \subsetneq C^\infty$ içermesinin gerçek olduğu
+kanıtlanır; son olarak fizikteki iki büyük sonucun --- her kararlı dengenin
+harmonik oluşu ve kuantizasyon --- aslında aynı serinin iki ayrı sonucu olduğu
+savunulur. Metindeki her sayısal iddia bu deponun \texttt{02-python/}
+klasöründeki betiklerle üretilmiş ve doğrulanmıştır.
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+% =====================================================================
+\section{Katsayılar: $n!$ bir süsleme değildir}
+% =====================================================================
+
+Taylor açılımının en çok ezberlenen, en az anlaşılan yeri paydadaki $n!$'dir.
+Oysa o çarpan bir tercih değil, tek bir isteğin kaçınılmaz sonucudur.
+
+$a$ noktası civarında $f$'i bir polinomla temsil etmek isteyelim. Polinomu
+$(x-a)$'nın kuvvetleri cinsinden yazmak doğaldır:
+\begin{equation}\label{eq:genel-polinom}
+  P(x) = c_0 + c_1(x-a) + c_2(x-a)^2 + \cdots + c_N(x-a)^N .
+\end{equation}
+
+Tek bir şey isteyelim: \emph{$P$'nin $a$ noktasındaki türevleri $f$'inkilerle
+aynı olsun.} Bu isteğin katsayıları tamamen belirlediğini görelim.
+
+\begin{onerme}\label{onerme:katsayilar}
+$P$ \eqref{eq:genel-polinom} biçiminde olsun. Her $0 \le n \le N$ için
+\[
+  P^{(n)}(a) = n!\,c_n .
+\]
+\end{onerme}
+
+\begin{proof}
+$(x-a)^k$ terimini $n$ kez türevleyelim. $k < n$ ise sonuç sıfırdır. $k > n$
+ise sonuç $(x-a)^{k-n}$ çarpanı taşır ve $x=a$'da sıfırlanır. Yalnızca $k=n$
+terimi hayatta kalır ve
+\[
+  \frac{d^n}{dx^n}(x-a)^n = n(n-1)\cdots 2\cdot 1 = n!
+\]
+verir. Dolayısıyla $P^{(n)}(a) = n!\,c_n$.
+\end{proof}
+
+\begin{sonuc}[Katsayıların zorunluluğu]
+$P^{(n)}(a) = f^{(n)}(a)$ istenirse, katsayılar için \emph{tek} seçenek
+\begin{equation}\label{eq:katsayi}
+  c_n = \frac{f^{(n)}(a)}{n!}
+\end{equation}
+olur.
+\end{sonuc}
+
+Buradaki $n!$, türevleme işleminin $(x-a)^n$ terimine yapıştırdığı çarpandır;
+$n!$'e bölmek onu \emph{geri almanın} tek yoludur. Formülü ``şöyle
+tanımlıyoruz'' diye sunmak, aslında bir teoremi tanım kılığına sokmaktır.
+
+\begin{tanim}[Taylor polinomu ve Taylor serisi]
+$f$, $a$'da $N$ kez türevlenebilir olsun.
+\[
+  P_N(x) = \sum_{n=0}^{N} \frac{f^{(n)}(a)}{n!}(x-a)^n
+\]
+ifadesine $f$'in $a$ merkezli $N$.\ dereceden \emph{Taylor polinomu} denir.
+$f$ sonsuz kez türevlenebiliyorsa
+\[
+  T(x) = \sum_{n=0}^{\infty} \frac{f^{(n)}(a)}{n!}(x-a)^n
+\]
+biçimsel serisine $f$'in $a$ merkezli \emph{Taylor serisi} ($a=0$ için
+\emph{Maclaurin serisi}) denir.
+\end{tanim}
+
+\begin{not}
+Bu iki nesne \textbf{aynı şey değildir} ve aralarındaki fark bu metnin
+omurgasıdır. $P_N$ her zaman vardır ve sonludur. $T$ ise yakınsayabilir de
+yakınsamayabilir de; yakınsasa bile $f$'e eşit olmayabilir. Bölüm~\ref{sec:kalan}
+birincisini, Bölüm~\ref{sec:analitik-degil} ikincisini ele alır.
+\end{not}
+
+% =====================================================================
+\section{Taylor teoremi ve Lagrange kalanı}\label{sec:kalan}
+% =====================================================================
+
+Taylor teoremi bir yaklaşım tavsiyesi değil, bir \emph{eşitliktir}.
+
+\begin{teorem}[Taylor, Lagrange kalanıyla]\label{teorem:taylor}
+$f$, $[a,x]$ (veya $[x,a]$) kapalı aralığında $N$ kez sürekli türevlenebilir
+ve açık aralıkta $(N+1)$ kez türevlenebilir olsun. O hâlde $a$ ile $x$
+\emph{arasında} bir $\xi$ vardır ki
+\begin{equation}\label{eq:lagrange}
+  f(x) = P_N(x) + \frac{f^{(N+1)}(\xi)}{(N+1)!}(x-a)^{N+1}.
+\end{equation}
+\end{teorem}
+
+\begin{proof}
+$x \neq a$ sabitlensin ve $M$ sayısı
+\[
+  f(x) = P_N(x) + M\,(x-a)^{N+1}
+\]
+olacak biçimde tanımlansın ($x \ne a$ olduğundan $M$ tektir). Yardımcı
+fonksiyonu
+\[
+  g(t) = f(t) - P_N(t) - M\,(t-a)^{N+1}
+\]
+ile tanımlayalım. Önerme~\ref{onerme:katsayilar} gereği $P_N^{(n)}(a) =
+f^{(n)}(a)$ olduğundan
+\[
+  g(a) = g'(a) = \cdots = g^{(N)}(a) = 0,
+\]
+ayrıca $M$'nin seçimi gereği $g(x) = 0$'dır.
+
+$g(a) = g(x) = 0$ olduğundan Rolle teoremi $a$ ile $x$ arasında bir $\xi_1$
+verir: $g'(\xi_1) = 0$. Şimdi $g'(a) = 0 = g'(\xi_1)$ olduğundan Rolle yine
+uygulanır ve $a$ ile $\xi_1$ arasında $g''(\xi_2) = 0$ olan bir $\xi_2$
+bulunur. Bu $N+1$ kez tekrarlanırsa $a$ ile $x$ arasında
+\[
+  g^{(N+1)}(\xi) = 0
+\]
+sağlayan bir $\xi$ elde edilir. Öte yandan $P_N$ derecesi $N$ olan bir polinom
+olduğundan $P_N^{(N+1)} \equiv 0$ ve $\frac{d^{N+1}}{dt^{N+1}}(t-a)^{N+1} =
+(N+1)!$ olduğundan
+\[
+  0 = g^{(N+1)}(\xi) = f^{(N+1)}(\xi) - (N+1)!\,M
+  \quad\Longrightarrow\quad
+  M = \frac{f^{(N+1)}(\xi)}{(N+1)!},
+\]
+ki bu tam olarak \eqref{eq:lagrange}'dir.
+\end{proof}
+
+\begin{sonuc}[Hata sınırı]\label{sonuc:sinir}
+$\displaystyle\sup_{t \in [a,x]} \bigl|f^{(N+1)}(t)\bigr| = M_{N+1} < \infty$ ise
+\begin{equation}\label{eq:sinir}
+  \bigl|f(x) - P_N(x)\bigr| \;\le\; \frac{M_{N+1}}{(N+1)!}\,|x-a|^{N+1}.
+\end{equation}
+\end{sonuc}
+
+\subsection*{Sayısal doğrulama ve bir uyarı}
+
+Bu deponun \texttt{02-python/src/kalan\_dogrulama.py} betiği, sekiz fonksiyon
+$\times$ $N=1,\dots,12$ $\times$ $1501$ nokta olmak üzere toplam $144\,096$
+noktada \eqref{eq:sinir} eşitsizliğini sınar. Sonuç: \textbf{teyit edilen ihlal
+sayısı sıfırdır}.
+
+Ancak burada ciddi bir sayısal tuzak vardır ve dürüstlük gereği açıkça
+yazılmalıdır. Çift duyarlıklı (float64) aritmetikle bakıldığında
+$2232$ nokta sınırı \emph{aşıyor görünür}. Örneğin $f=\exp$, $a=1$, $N=12$,
+$x=0{,}996$ için
+\[
+  \text{gerçek hata} \approx 2{,}93\times 10^{-41},
+  \qquad
+  \text{float64 ile ölçülen} \approx 4{,}44\times 10^{-16}.
+\]
+Ölçülen değer sınırdan $10^{25}$ kat büyüktür. Bu bir teorem ihlali değil,
+\emph{ölçüm aletinin çözünürlüğüdür}: $\varepsilon\,|f(x)| \approx 6\times
+10^{-16}$ mertebesinin altındaki bir farkı float64 göremez. Aynı noktalar
+\texttt{mpmath} ile $60$ basamakta yeniden ölçüldüğünde oranların tamamı $1$'in
+altına döner. Betik bu yüzden float64'e yalnızca \emph{aday} işaretletir;
+hükmü yüksek hassasiyete bırakır.
+
+\subsection*{$\xi$ gerçekten vardır}
+
+Teorem~\ref{teorem:taylor} bir \emph{varlık} iddiasıdır. Betik bunu somutlar:
+\eqref{eq:lagrange}'den $\xi$'nin sağlaması gereken değer
+\[
+  f^{(N+1)}(\xi) = \frac{\bigl(f(x)-P_N(x)\bigr)(N+1)!}{(x-a)^{N+1}}
+\]
+olarak tek başına belirlenir ve bu denklemin kökü $(a,x)$ aralığında kök bulma
+ile aranır. Her denemede bulunur. Özellikle dikkat çekici olan şudur:
+$f = \ln(1+x)$, $a=0$, $x=1{,}8$ noktası yakınsaklık yarıçapının
+\emph{dışındadır} --- seri orada ıraksar --- ama sonlu $N$ için eşitlik hâlâ
+geçerlidir ve $\xi \approx 0{,}1436$ bulunur.
+
+Bu, Taylor polinomu ile Taylor serisi ayrımının en keskin örneğidir:
+\textbf{polinom her yerde anlamlıdır, seri her yerde anlamlı değildir.}
+
+% =====================================================================
+\section{Yakınsaklık yarıçapı kompleks düzlemin geometrisidir}\label{sec:yaricap}
+% =====================================================================
+
+\begin{teorem}[Cauchy--Hadamard]\label{teorem:ch}
+$\sum_{n\ge 0} a_n (z-a)^n$ kuvvet serisi için
+\[
+  \frac{1}{R} = \limsup_{n\to\infty} |a_n|^{1/n}
+\]
+ile tanımlanan $R \in [0,\infty]$ sayısı şunu sağlar: seri $|z-a| < R$ için
+mutlak yakınsar, $|z-a| > R$ için ıraksar.
+\end{teorem}
+
+\begin{teorem}[Yarıçap = en yakın tekilliğe uzaklık]\label{teorem:tekillik}
+$f$, $a$ merkezli bir açık diskte holomorf olsun. $f$'in $a$ merkezli Taylor
+serisinin yakınsaklık yarıçapı
+\[
+  R = \operatorname{dist}\bigl(a,\ \Sigma\bigr)
+\]
+olur; burada $\Sigma$, $f$'in analitik olarak devam ettirilemediği noktalar
+kümesidir.
+\end{teorem}
+
+\subsection*{$1/(1+x^2)$: reel eksende hiçbir ipucu yoktur}
+
+\[
+  f(x) = \frac{1}{1+x^2}
+\]
+fonksiyonu reel eksende kusursuzdur: her yerde tanımlı, sınırlı ($0 < f \le 1$),
+sonsuz kez türevlenebilir. Buna rağmen Maclaurin serisi
+\[
+  1 - x^2 + x^4 - x^6 + \cdots
+\]
+yalnızca $|x| < 1$ için yakınsar. \emph{Reel eksende bu sınırın sebebini
+gösteren hiçbir şey yoktur.}
+
+Sebep bir boyut yukarıdadır. $1+z^2 = (z-i)(z+i)$ olduğundan $f$'in $z = \pm i$
+noktalarında kutupları vardır ve bu noktalar orijine tam olarak $1$
+uzaklıktadır. Teorem~\ref{teorem:tekillik} gereği $R = 1$.
+
+\subsection*{Merkezi kaydırmak}
+
+Yarıçap fonksiyonun değil, \emph{(fonksiyon, merkez) çiftinin} özelliğidir.
+Aynı $f$ için:
+\begin{center}
+\begin{tabular}{lll}
+\hline
+merkez $a$ & en yakın tekillik & $R = |a - (\pm i)|$ \\
+\hline
+$0$   & $\pm i$ & $1$ \\
+$1$   & $\pm i$ & $\sqrt{2} \approx 1{,}4142$ \\
+$2$   & $\pm i$ & $\sqrt{5} \approx 2{,}2361$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\texttt{02-python/src/kompleks\_harita.py} betiği bunu \emph{iddia etmez,
+gösterir}: kompleks düzlemde
+\[
+  L_N(z) \;=\; \frac{1}{N}\log_{10}\bigl|f(z) - P_N(z)\bigr|
+\]
+büyüklüğü çizilir. $|f - P_N| \sim C\,(|z-a|/R)^{N+1}$ olduğundan
+\[
+  L_N(z) \;\xrightarrow[N\to\infty]{}\; \log_{10}\!\left(\frac{|z-a|}{R}\right),
+\]
+yani $L_N$'nin \emph{işareti} doğrudan yakınsaklığı söyler ve $L_N = 0$ düzeyi
+tam olarak $|z-a| = R$ çemberidir. Haritada disk kimse çizmeden belirir;
+veriden çıkan sınır ile teorik çember çakışır.
+
+\begin{not}[Sonlu $N$'in dürüst payı]
+Haritadan okunan yarıçaplar teorik değerin sistematik olarak \%5--8 altında
+çıkar. Bu bir hata değil, yukarıdaki yakınsamanın ancak $N\to\infty$ limitinde
+tam olmasının sonucudur. Aynı sebeple $\ln(1+z)$ için sınır eğrisi sonlu
+$N$'de gözle görülür biçimde çember \emph{değildir}: o fonksiyonun katsayıları
+$1/n$ gibi cebirsel azalır (kutuplu fonksiyonlardaki geometrik azalmanın
+aksine), bu yüzden sınır daha yavaş sıkışır.
+\end{not}
+
+\subsection*{Cauchy--Hadamard'ın sayısal sınırları}
+
+\texttt{02-python/src/yakinsaklik\_orani.py} $R$'yi yalnızca katsayı dizisine
+bakarak kestirir --- fonksiyona veya tekilliklerine hiç bakmadan. İki bağımsız
+yolun aynı sayıda buluşması Teorem~\ref{teorem:ch}'nin içeriğidir. Betiğin
+ortaya çıkardığı üç dürüst sınır:
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{$R=\infty$ sayısal olarak görülemez.} $\exp$ için
+      $|a_n|^{1/n} = (1/n!)^{1/n} \approx e/n$ (Stirling); $n=60$'ta bu hâlâ
+      $\approx 0{,}045$, yani $R \approx 22$. Sonsuzu sonlu veriden okumak
+      mümkün değildir; yalnızca ``büyüyor'' denebilir.
+\item \textbf{Cebirsel katsayılar yavaştır.} $\ln(1+x)$ ve $\sqrt{1+x}$ için
+      $n=60$'ta bile \%7--13 sapma kalır. $\limsup$'ın doğası budur.
+\item \textbf{Oran testi her zaman çalışmaz.} $f = 1/(1+x^2)$, $a=1$ için
+      C--H \%1{,}66 hatayla doğru cevabı verirken oran testi \%22{,}66 sapar.
+      Sebep: $i$ ve $-i$, $a=1$'e \emph{eşit uzaklıkta ama farklı yönlerdedir};
+      katsayılar salınır ve $|a_n/a_{n+1}|$ oranının limiti yoktur. Teoremin
+      neden limit değil $\limsup$ ile kurulduğu tam olarak budur.
+\end{enumerate}
+
+% =====================================================================
+\section{Pürüzsüz ama analitik değil: $C^\omega \subsetneq C^\infty$}
+\label{sec:analitik-degil}
+% =====================================================================
+
+\begin{tanim}
+$f$ bir açık kümede sonsuz kez türevlenebiliyorsa $f \in C^\infty$ denir.
+Ayrıca her noktanın bir komşuluğunda kendi Taylor serisine eşitse $f \in
+C^\omega$ ($f$ \emph{analitiktir}) denir.
+\end{tanim}
+
+Açıkça $C^\omega \subseteq C^\infty$. İçermenin \emph{gerçek} olduğunu, yani
+eşitlik olmadığını gösteren klasik tanık şudur.
+
+\begin{teorem}\label{teorem:e-1x2}
+\[
+  f(x) = \begin{cases} e^{-1/x^2}, & x \neq 0,\\ 0, & x = 0\end{cases}
+\]
+fonksiyonu $\R$ üzerinde $C^\infty$'dur ve her $n \ge 0$ için $f^{(n)}(0) = 0$
+sağlanır. Dolayısıyla $f$'in Maclaurin serisi özdeş olarak sıfırdır ve $f$
+hiçbir $0$ komşuluğunda kendi Taylor serisine eşit değildir; yani
+$f \notin C^\omega$.
+\end{teorem}
+
+\begin{proof}[İspatın çatısı]
+$x \neq 0$ için tümevarımla
+\[
+  f^{(n)}(x) = p_n\!\left(\tfrac1x\right) e^{-1/x^2}
+\]
+biçiminde olduğu gösterilir; burada $p_n$ bir polinomdur. Gerçekten $n=0$ için
+$p_0 = 1$; türev alındığında
+\[
+  f^{(n+1)}(x) = \left[-\tfrac{1}{x^2}p_n'\!\left(\tfrac1x\right)
+  + \tfrac{2}{x^3}p_n\!\left(\tfrac1x\right)\right] e^{-1/x^2},
+\]
+ve köşeli parantez yine $1/x$ cinsinden bir polinomdur.
+
+$x \to 0$ limitinde $u = 1/x \to \pm\infty$ konulursa
+\[
+  \lim_{x\to 0} f^{(n)}(x) = \lim_{|u|\to\infty} p_n(u)\,e^{-u^2} = 0,
+\]
+çünkü $e^{-u^2}$ her polinomdan hızlı sıfıra gider. Buradan tümevarımla
+$f^{(n)}(0) = 0$ (türev tanımındaki fark bölümü de aynı sebeple sıfıra gider)
+ve $f^{(n)}$'nin $0$'da sürekli olduğu çıkar. Dolayısıyla $f \in C^\infty$ ve
+tüm Maclaurin katsayıları sıfırdır.
+
+Seri $\equiv 0$ olduğundan her $x$ için yakınsar (yakınsaklık yarıçapı
+sonsuzdur), ama $x \neq 0$ için $f(x) > 0$'dır. Seri yakınsar, fonksiyona
+yakınsamaz.
+\end{proof}
+
+\texttt{02-python/src/analitik\_degil.py} betiği ilk dokuz türevi
+\emph{sembolik limit} ile hesaplayarak sıfır olduklarını doğrular. Sayısal
+türev burada kanıt olarak kabul edilemez: $f(0{,}1) = e^{-100} \approx
+3{,}7\times 10^{-44}$ zaten float64'ün göremeyeceği kadar küçüktür, ``sıfır
+çıktı'' demek hiçbir şey göstermez.
+
+\subsection*{Sebep yine kompleks düzlemdedir}
+
+Reel eksende $f$ uslu uslu sıfıra gider. Ama $z = iy$ alınırsa
+\[
+  -\frac{1}{z^2} = -\frac{1}{(iy)^2} = +\frac{1}{y^2}
+  \quad\Longrightarrow\quad
+  e^{-1/z^2} = e^{1/y^2} \xrightarrow[y\to 0]{} \infty .
+\]
+Aynı $z=0$ noktasına reel eksenden yaklaşınca $0$, hayali eksenden yaklaşınca
+$\infty$ gelir. Limit yoktur: $z=0$ bir \emph{esas tekilliktir}. Somut olarak
+$|z| = 0{,}05$ için reel yönde $1{,}9\times 10^{-174}$, hayali yönde
+$5{,}2\times 10^{+173}$.
+
+Bu, Bölüm~\ref{sec:yaricap}'daki dersin en uç hâlidir. Orada kompleks
+tekillik yarıçapı $1$'e düşürüyordu; burada seriyi tamamen işe yaramaz kılıyor.
+
+% =====================================================================
+\section{Uygulama: her kararlı denge harmonik osilatördür}
+% =====================================================================
+
+$V$ bir potansiyel ve $x_0$ bir \emph{kararlı denge} noktası olsun; yani
+$V'(x_0) = 0$ ve $V''(x_0) > 0$. $u = x - x_0$ yazıp açalım:
+\begin{equation}\label{eq:potansiyel}
+  V(x_0+u) = \underbrace{V(x_0)}_{\text{sabit}}
+  + \underbrace{V'(x_0)\,u}_{=\,0}
+  + \tfrac12 V''(x_0)\,u^2
+  + \tfrac16 V'''(x_0)\,u^3 + \cdots
+\end{equation}
+
+Birinci terim sabittir; kuvvet $-V'$ olduğundan harekete katkısı yoktur.
+İkinci terim, $x_0$'ın denge noktası \emph{olmasının tanımı} gereği sıfırdır.
+Geriye ilk hayatta kalan terim olarak $\tfrac12 V''(x_0)u^2$ kalır --- yani
+yay potansiyeli, $k = V''(x_0)$ yay sabitiyle.
+
+\begin{sonuc}
+Küçük salınımlar için, potansiyelin biçimi ne olursa olsun, hareket
+\[
+  m\ddot{u} = -V''(x_0)\,u
+\]
+harmonik osilatör denklemine indirgenir.
+\end{sonuc}
+
+Bu bir benzetme ya da kolaylık değildir. Doğa harmonik osilatörü
+``seçmiyor''; Taylor serisi başka seçenek bırakmıyor. Harmonik osilatörün
+fizikte her yerde çıkmasının sebebi, bir tesadüf değil,
+\eqref{eq:potansiyel}'deki ikinci terimin denge noktasında zorunlu olarak
+ölmesidir.
+
+\subsection*{Atılan terim nereye gitti? Sarkaç}
+
+Sarkaç denklemi $\ddot\theta = -(g/L)\sin\theta$ tamdır ve doğrusal değildir.
+``Küçük açı yaklaşımı'' $\sin\theta \approx \theta$, Taylor açılımının
+\[
+  \sin\theta = \theta - \frac{\theta^3}{6} + \frac{\theta^5}{120} - \cdots
+\]
+ilk terimde kesilmesidir. Atılan $-\theta^3/6$ yok olmaz; \emph{periyotta}
+geri döner. Tam periyot eliptik integralle verilir ve genliğe göre açılırsa
+\begin{equation}\label{eq:periyot}
+  T = T_0\left(1 + \frac{\theta_0^2}{16}
+  + \frac{11\,\theta_0^4}{3072} + \cdots\right),
+  \qquad T_0 = 2\pi\sqrt{L/g}.
+\end{equation}
+
+Harmonik osilatörde periyot genlikten bağımsızdır (izokronizm); gerçek
+sarkaçta değildir. \texttt{02-python/src/sarkac.py} betiği tam denklemi
+\texttt{solve\_ivp} ile çözer ve periyodu olay tabanlı sıfır geçişinden ölçer.
+Bulgular ($L = 1$~m, $g = 9{,}80665$~m/s$^2$, $T_0 = 2{,}006409$~s):
+
+\begin{center}
+\begin{tabular}{rrrr}
+\hline
+$\theta_0$ & ölçülen $T$ (s) & $T_0(1+\theta_0^2/16)$ & harmoniğe göre sapma \\
+\hline
+$10^\circ$  & $2{,}010236$ & $2{,}010229$ & \%$0{,}19$ \\
+$45^\circ$  & $2{,}086612$ & $2{,}083763$ & \%$4{,}00$ \\
+$90^\circ$  & $2{,}368246$ & $2{,}315823$ & \%$18{,}03$ \\
+$150^\circ$ & $3{,}535702$ & $2{,}865891$ & \%$76{,}22$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Sayısal ölçüm ile eliptik kapalı biçim arasındaki en büyük fark
+$1{,}3\times 10^{-11}$\%'dir; yani çözücü ile analitik sonuç birbirini
+doğrular ve tablodaki her sapma Taylor kesmesinden gelir.
+
+Mertebe kontrolü de yapılmıştır: düzeltmelerin kalan hatası log--log eğiminden
+okunduğunda düzeltmesiz $\theta_0^{2{,}00}$, $\theta_0^2/16$ ile
+$\theta_0^{4{,}00}$, bir sonraki terimle $\theta_0^{6{,}01}$ çıkar. Her
+düzeltme mertebeyi tam olarak $2$ artırır, çünkü $\theta_0 \to -\theta_0$
+simetrisi tek kuvvetleri yasaklar. \textbf{Taylor kesmesinin hata mertebesi
+bir tahmin değil, ölçülebilir bir öngörüdür.}
+
+% =====================================================================
+\section{Bonus: Frobenius serileri ve kuantizasyonun doğuşu}
+% =====================================================================
+
+Şimdiye kadar bilinen bir fonksiyonun serisi çıkarıldı. Bu bölümde yön
+tersine döner: \emph{seri önce gelir}, fonksiyon ondan doğar.
+
+\subsection*{Legendre denklemi}
+
+\begin{equation}\label{eq:legendre}
+  (1-x^2)y'' - 2xy' + \lambda y = 0
+\end{equation}
+denkleminde $y = \sum_n a_n x^n$ konulursa katsayılar için
+\begin{equation}\label{eq:legendre-rekurans}
+  a_{n+2} = \frac{n(n+1) - \lambda}{(n+1)(n+2)}\,a_n
+\end{equation}
+rekürans bağıntısı çıkar. Denklem $\lambda$ üzerinde \emph{hiçbir kısıt
+koymaz}: her $\lambda$ için bir seri çözüm vardır.
+
+Kısıt fizikten gelir. \eqref{eq:legendre} küresel koordinatlarda
+$x = \cos\theta$ ile kurulur, dolayısıyla $x = \pm 1$ (kutuplar) fiziksel
+noktalardır ve çözümün orada sonlu kalması gerekir. Büyük $n$ için
+\eqref{eq:legendre-rekurans}'den $a_{n+2}/a_n \to 1$ olur; seri $x = \pm 1$'de
+ıraksar. Bundan kaçmanın \emph{tek} yolu payın sıfırlanmasıdır:
+\[
+  n(n+1) - \lambda = 0
+  \quad\Longleftrightarrow\quad
+  \lambda = \ell(\ell+1), \quad \ell \in \N .
+\]
+Seri o mertebede kesilir ve geriye bir \emph{polinom} kalır: Legendre
+polinomu.
+
+\subsection*{Hermite denklemi}
+
+\begin{equation}\label{eq:hermite}
+  y'' - 2xy' + 2\lambda y = 0,
+  \qquad
+  a_{n+2} = \frac{2(n-\lambda)}{(n+1)(n+2)}\,a_n .
+\end{equation}
+Kuantum harmonik osilatörde dalga fonksiyonu $\psi = H(x)e^{-x^2/2}$'dir. $H$
+seri olarak kalırsa büyük $x$'te $e^{x^2}$ gibi büyür ve $\psi \sim e^{+x^2/2}$
+olur --- normalize edilemez. Kesilme şartı $\lambda = n \in \N$'dir.
+
+\texttt{02-python/src/frobenius.py} betiği $x=4$'te bunu ölçer: $\lambda = 3$
+için $\psi(4) \approx -1{,}3\times 10^{-2}$ (sönüyor), $\lambda = 2{,}5$ için
+$\psi(4) \approx 1{,}4\times 10^{1}$ (patlıyor).
+
+\begin{not}[İki dürüst uyarı]
+\emph{Birincisi}, kesilmeyen Legendre serisinin $x=1$'deki ıraksaması
+logaritmiktir, yani çok yavaştır; $400$ terimde bile kısmi toplam sonlu bir
+sayı gibi görünür. Sayısal bir deney ıraksamayı ``gösteremez'', yalnızca hiç
+durmadığını gösterebilir. Iraksadığını söyleyen cebirdir.
+
+\emph{İkincisi}, kesilme kararı katsayılara sayısal eşik uygulanarak
+verilemez. $\lambda = 2{,}5$ için Hermite katsayıları da hızla küçülür
+(tıpkı $e^{x^2}$'nin katsayıları gibi) ve eşik yöntemi seriyi yanlışlıkla
+``kesilmiş'' sayar. Karar rekürans payının cebirsel sıfırlanmasından
+okunmalıdır.
+\end{not}
+
+\subsection*{Sonuç}
+
+Kuantum mekaniği dersinde $E_n = \hbar\omega(n+\tfrac12)$ diye ezberlenen
+formüldeki $n$, rekürans bağıntısının hangi indekste sıfırlandığıdır.
+Enerji kuantumlanmıştır çünkü seri ancak tam sayılarda kesilir. Tam sayılar
+denklemden değil, \emph{çözümün sonlu kalması şartından} gelir.
+
+\textbf{Kuantizasyon fizikten değil, yakınsaklıktan doğar.} Fiziğin koyduğu
+tek şart ``çözüm sonlu olsun''dur; gerisini seri halleder.
+
+% =====================================================================
+\section{Toparlama}
+% =====================================================================
+
+\begin{enumerate}[leftmargin=*]
+\item Katsayılardaki $n!$, türevlemenin ürettiği çarpanı geri almanın tek
+      yoludur; formül bir tanım değil, bir zorunluluktur.
+\item Taylor \emph{polinomu} ile Taylor \emph{serisi} farklı nesnelerdir.
+      Lagrange kalanı sonlu $N$ için bir eşitliktir ve yakınsaklık yarıçapının
+      dışında bile geçerlidir.
+\item Yakınsaklık yarıçapı reel eksende değil kompleks düzlemde belirlenir:
+      $R$, merkezin en yakın tekilliğe uzaklığıdır. Yarıçap fonksiyonun değil,
+      (fonksiyon, merkez) çiftinin özelliğidir.
+\item Serinin yakınsaması fonksiyona yakınsaması demek değildir:
+      $C^\omega \subsetneq C^\infty$ ve tanığı $e^{-1/x^2}$'dir.
+\item Her kararlı denge harmonik osilatördür, çünkü denge noktasında birinci
+      mertebe terim ölür ve ilk hayatta kalan terim kareseldir.
+\item Kuantizasyon, serinin kesilme şartından doğar.
+\end{enumerate}
+
+Ortak bir çekirdek vardır: \emph{Taylor serisi bir hesap aracı değil, yerel
+davranışın tam bir muhasebesidir.} Atılan her terimin faturası bir yerde
+kesilir --- sarkacın periyodunda, yakınsaklık diskinin kenarında, ya da bir
+kuantum sayısında.
+
+% =====================================================================
+\section*{Kaynakça}
+\addcontentsline{toc}{section}{Kaynakça}
+% =====================================================================
+
+\begin{thebibliography}{99}
+
+\bibitem{rudin}
+W. Rudin, \emph{Principles of Mathematical Analysis}, 3.\ baskı,
+McGraw--Hill, 1976. (Taylor teoremi: Teorem 5.15; kuvvet serileri: Bölüm 8.)
+
+\bibitem{ahlfors}
+L. V. Ahlfors, \emph{Complex Analysis}, 3.\ baskı, McGraw--Hill, 1979.
+(Yakınsaklık yarıçapı ve tekillikler: Bölüm 2 ve 4.)
+
+\bibitem{stein}
+E. M. Stein, R. Shakarchi, \emph{Complex Analysis}, Princeton University
+Press, 2003.
+
+\bibitem{whittaker}
+E. T. Whittaker, G. N. Watson, \emph{A Course of Modern Analysis}, 4.\ baskı,
+Cambridge University Press, 1927. (Legendre ve Hermite denklemleri,
+Frobenius yöntemi.)
+
+\bibitem{arfken}
+G. B. Arfken, H. J. Weber, F. E. Harris, \emph{Mathematical Methods for
+Physicists}, 7.\ baskı, Academic Press, 2013. (Seri çözümler ve özel
+fonksiyonlar.)
+
+\bibitem{landau}
+L. D. Landau, E. M. Lifshitz, \emph{Mechanics}, 3.\ baskı,
+Butterworth--Heinemann, 1976. ($\S$11: küçük salınımlar; $\S$28:
+anharmonik titreşimler.)
+
+\bibitem{griffiths}
+D. J. Griffiths, \emph{Introduction to Quantum Mechanics}, 2.\ baskı,
+Pearson, 2005. (Bölüm 2.3: harmonik osilatörün analitik çözümü ve kesilme
+şartı.)
+
+\bibitem{depo}
+Bu deponun sayısal laboratuvarı: \texttt{02-python/src/} altındaki betikler ve
+\texttt{out/tablolar/} altındaki üretilmiş tablolar. Metindeki her sayı oradan
+gelir.
+
+\end{thebibliography}
+
+\end{document}
