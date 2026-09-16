@@ -7,16 +7,16 @@ Her satır, o fonksiyon için N=1..12 ve 1501 nokta üzerinde yapılan tüm test
 
 | fonksiyon      | a      | aralık      | taranan nokta | float64 aday ihlal | en kötü oran | nerede | yuvarlama rejimi |
 |----------------|--------|-------------|---------------|--------------------|--------------|--------|------------------|
-| sin(x)         | 0      | [-4, 4]     | 18 012        | 185                | 1.0506       | N=8    | 502              |
+| sin(x)         | 0      | [-4, 4]     | 18 012        | 187                | 1.0506       | N=8    | 502              |
 | cos(x)         | 0      | [-4, 4]     | 18 012        | 261                | 1.0178       | N=7    | 580              |
-| exp(x)         | 0      | [-3, 3]     | 18 012        | 364                | 1.0107       | N=4    | 717              |
+| exp(x)         | 0      | [-3, 3]     | 18 012        | 360                | 1.0107       | N=4    | 717              |
 | ln(1+x)        | 0      | [-0.85, 2]  | 18 012        | 177                | 2.3593       | N=7    | 272              |
 | 1/(1-x)        | 0      | [-0.9, 0.9] | 18 012        | 249                | 0.9988       | N=3    | 474              |
 | sqrt(1+x)      | 0      | [-0.7, 2]   | 18 012        | 242                | 1.0550       | N=5    | 484              |
-| sin(x), a=pi/4 | 0.7854 | [-3, 3]     | 18 012        | 391                | 1.0101       | N=10   | 715              |
-| exp(x), a=1    | 1      | [-2, 4]     | 18 012        | 363                | 1.0147       | N=4    | 717              |
+| sin(x), a=pi/4 | 0.7854 | [-3, 3]     | 18 012        | 377                | 1.0121       | N=7    | 715              |
+| exp(x), a=1    | 1      | [-2, 4]     | 18 012        | 371                | 1.0147       | N=4    | 717              |
 
-**Toplam: 144 096 nokta tarandı  2232 aday ihlal (4461 nokta yuvarlama rejiminde). mpmath ile TEYİT EDİLEN ihlal: 0.**
+**Toplam: 144 096 nokta tarandı  2224 aday ihlal (4461 nokta yuvarlama rejiminde). mpmath ile TEYİT EDİLEN ihlal: 0.**
 
 Oranın 1'e yaklaştığı yerler, sınırın *keskin* olduğu yerlerdir: orada eşitliği sağlayan ksi, türevin supremumunu aldığı noktaya denk düşer. Oranın küçük kaldığı yerlerde ise sınır gevşektir — ama hiçbir zaman yanlış değildir.
 
@@ -39,4 +39,4 @@ Aynı noktalar mpmath ile 60 basamakta yeniden ölçüldüğünde oran 1'in alt�
 | cos(x)    | 7  | -0.0107 | 1.110e-16    | 4.156e-21   | 4.156e-21    | 2.671e+04    | 0.999999    |
 | cos(x)    | 7  | 0.0107  | 1.110e-16    | 4.156e-21   | 4.156e-21    | 2.671e+04    | 0.999999    |
 
-**2232 adayın tamamı teyit edildi; mpmath ile ihlal sayısı: 0.**
+**2224 adayın tamamı teyit edildi; mpmath ile ihlal sayısı: 0.**

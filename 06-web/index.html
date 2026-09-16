@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taylor Laboratuvarı — etkileşimli</title>
+<style>
+:root{
+  --zemin:#0f1419; --panel:#161d26; --panel2:#1d2631; --cizgi:#2a3543;
+  --metin:#dde5ee; --sonuk:#8b9bb0; --vurgu:#4db2e8; --uyari:#e87a5a;
+  --iyi:#6ece8a; --f:#e8c84d; --p:#4db2e8; --hata:#e8567a;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--zemin); color:var(--metin);
+  font:15px/1.6 system-ui,"Segoe UI",Roboto,sans-serif;
+}
+header{
+  padding:28px 24px 20px; border-bottom:1px solid var(--cizgi);
+  background:linear-gradient(180deg,#131a22,#0f1419);
+}
+header h1{margin:0 0 6px; font-size:24px; letter-spacing:-.3px}
+header p{margin:0; color:var(--sonuk); max-width:70ch}
+nav{display:flex; gap:2px; padding:0 24px; background:var(--panel); border-bottom:1px solid var(--cizgi)}
+nav button{
+  background:none; border:none; border-bottom:2px solid transparent;
+  color:var(--sonuk); padding:13px 18px; font:inherit; font-size:14px; cursor:pointer;
+}
+nav button:hover{color:var(--metin)}
+nav button.aktif{color:var(--vurgu); border-bottom-color:var(--vurgu)}
+main{padding:24px; max-width:1180px; margin:0 auto}
+.sekme{display:none}
+.sekme.aktif{display:block}
+.duzen{display:grid; grid-template-columns:260px 1fr; gap:20px; align-items:start}
+@media(max-width:860px){.duzen{grid-template-columns:1fr}}
+.kontrol{background:var(--panel); border:1px solid var(--cizgi); border-radius:10px; padding:16px}
+.kontrol h3{margin:0 0 14px; font-size:13px; text-transform:uppercase;
+  letter-spacing:.8px; color:var(--sonuk); font-weight:600}
+.alan{margin-bottom:15px}
+.alan label{display:block; font-size:13px; color:var(--sonuk); margin-bottom:5px}
+.alan .deger{float:right; color:var(--vurgu); font-variant-numeric:tabular-nums}
+select,input[type=range]{width:100%}
+select{
+  background:var(--panel2); color:var(--metin); border:1px solid var(--cizgi);
+  border-radius:6px; padding:7px 9px; font:inherit; font-size:14px;
+}
+input[type=range]{accent-color:var(--vurgu); margin:2px 0}
+.tuval{background:var(--panel); border:1px solid var(--cizgi); border-radius:10px; padding:12px}
+canvas{display:block; width:100%; height:auto; border-radius:6px}
+.aciklama{
+  margin-top:16px; background:var(--panel); border:1px solid var(--cizgi);
+  border-left:3px solid var(--vurgu); border-radius:8px; padding:14px 18px;
+}
+.aciklama h4{margin:0 0 8px; font-size:15px}
+.aciklama p{margin:0 0 10px; color:#c3d0de}
+.aciklama p:last-child{margin-bottom:0}
+.aciklama.uyari{border-left-color:var(--uyari)}
+.olcu{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:10px; margin-top:12px;
+}
+.olcu div{background:var(--panel2); border:1px solid var(--cizgi); border-radius:8px; padding:10px 12px}
+.olcu span{display:block; font-size:12px; color:var(--sonuk); margin-bottom:3px}
+.olcu b{font-size:17px; font-variant-numeric:tabular-nums; font-weight:600}
+table{border-collapse:collapse; width:100%; margin-top:12px; font-size:14px}
+th,td{padding:7px 10px; text-align:right; border-bottom:1px solid var(--cizgi)}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--sonuk); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:.5px}
+td{font-variant-numeric:tabular-nums}
+code{background:var(--panel2); padding:1px 5px; border-radius:4px; font-size:13px}
+.efsane{display:flex; gap:16px; flex-wrap:wrap; margin-top:10px; font-size:13px; color:var(--sonuk)}
+.efsane i{display:inline-block; width:14px; height:3px; border-radius:2px; vertical-align:middle; margin-right:5px}
+footer{padding:22px 24px; color:var(--sonuk); font-size:13px; border-top:1px solid var(--cizgi); margin-top:30px}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Taylor Laboratuvarı</h1>
+  <p>Üç şeyi iddia etmek yerine göstermek için: bir polinomun fonksiyonu nerede
+     bıraktığını, yakınsaklık diskinin reel eksende değil kompleks düzlemde
+     belirlendiğini, ve atılan terimin faturasının sarkacın periyodunda
+     kesildiğini. Her şey tarayıcıda hesaplanır; dış bağımlılık yoktur.</p>
+</header>
+
+<nav>
+  <button class="aktif" data-sekme="yaklasim">1 · Yaklaşım ve hata</button>
+  <button data-sekme="kompleks">2 · Kompleks disk</button>
+  <button data-sekme="sarkac">3 · Sarkaç</button>
+</nav>
+
+<main>
+
+<section id="yaklasim" class="sekme aktif">
+  <div class="duzen">
+    <div class="kontrol">
+      <h3>Ayarlar</h3>
+      <div class="alan">
+        <label for="y-fn">Fonksiyon</label>
+        <select id="y-fn"></select>
+      </div>
+      <div class="alan">
+        <label for="y-n">Derece N <span class="deger" id="y-n-d">5</span></label>
+        <input type="range" id="y-n" min="0" max="30" value="5">
+      </div>
+      <div class="alan">
+        <label for="y-a">Merkez a <span class="deger" id="y-a-d">0,00</span></label>
+        <input type="range" id="y-a" min="-2" max="2" step="0.05" value="0">
+      </div>
+      <div class="alan">
+        <label><input type="checkbox" id="y-hata" checked> Hata eğrisini göster</label>
+      </div>
+      <div class="alan">
+        <label><input type="checkbox" id="y-disk"> Yakınsaklık aralığını göster</label>
+      </div>
+    </div>
+    <div class="tuval">
+      <canvas id="y-tuval" width="1600" height="900"></canvas>
+      <div class="efsane">
+        <span><i style="background:#e8c84d"></i>f(x)</span>
+        <span><i style="background:#4db2e8"></i>P<sub>N</sub>(x)</span>
+        <span><i style="background:#e8567a"></i>|f − P<sub>N</sub>| (log ölçek)</span>
+      </div>
+    </div>
+  </div>
+  <div class="olcu" id="y-olcu"></div>
+  <div class="aciklama">
+    <h4>N'i büyütürken neye bakmalı</h4>
+    <p>Polinom merkeze yapışır ve oradan dışarı doğru açılır. Ama belli bir
+       noktadan sonra N'i artırmak <b>işe yaramaz</b>: yakınsaklık aralığının
+       dışında polinom N ile birlikte daha da hızlı patlar. Bunu en net
+       <code>1/(1-x)</code> ve <code>1/(1+x²)</code> ile görürsün — ikisinde de
+       duvar <code>|x-a| = 1</code>'de.</p>
+    <p><code>1/(1+x²)</code> reel eksende kusursuzdur: her yerde tanımlı,
+       sınırlı, sonsuz türevlenebilir. Duvarın sebebini burada arama —
+       2. sekmede.</p>
+  </div>
+</section>
+
+<section id="kompleks" class="sekme">
+  <div class="duzen">
+    <div class="kontrol">
+      <h3>Ayarlar</h3>
+      <div class="alan">
+        <label for="k-fn">Fonksiyon</label>
+        <select id="k-fn"></select>
+      </div>
+      <div class="alan">
+        <label for="k-n">Derece N <span class="deger" id="k-n-d">28</span></label>
+        <input type="range" id="k-n" min="4" max="48" value="28">
+      </div>
+      <div class="alan">
+        <label for="k-ar">Merkez Re(a) <span class="deger" id="k-ar-d">0,00</span></label>
+        <input type="range" id="k-ar" min="-2" max="2" step="0.05" value="0">
+      </div>
+      <div class="alan">
+        <label for="k-ai">Merkez Im(a) <span class="deger" id="k-ai-d">0,00</span></label>
+        <input type="range" id="k-ai" min="-1.5" max="1.5" step="0.05" value="0">
+      </div>
+      <div class="alan">
+        <label><input type="checkbox" id="k-cember" checked> Teorik çemberi çiz</label>
+      </div>
+      <div class="alan">
+        <label><input type="checkbox" id="k-tek" checked> Tekillikleri işaretle</label>
+      </div>
+    </div>
+    <div class="tuval">
+      <canvas id="k-tuval" width="1200" height="1200"></canvas>
+      <div class="efsane">
+        <span><i style="background:#2d6a4f"></i>yakınsıyor</span>
+        <span><i style="background:#f0f0f0"></i>sıfır düzeyi = disk sınırı</span>
+        <span><i style="background:#9d2449"></i>ıraksıyor</span>
+        <span><i style="background:#e8567a"></i>tekillik</span>
+      </div>
+    </div>
+  </div>
+  <div class="olcu" id="k-olcu"></div>
+  <div class="aciklama">
+    <h4>Disk kimse çizmeden ortaya çıkıyor</h4>
+    <p>Renklendirilen büyüklük <code>(1/N)·log₁₀|f(z) − P<sub>N</sub>(z)|</code>.
+       Bu nicelik <code>log₁₀(|z−a|/R)</code>'ye yakınsar, yani <b>işareti</b>
+       doğrudan yakınsaklığı söyler ve sıfır düzeyi tam olarak
+       <code>|z−a| = R</code> çemberidir. Beyaz sınır hatanın kendi
+       davranışından doğar; teorik yarıçap ona hiç girmez.</p>
+    <p>Merkezi kaydır: tekillikler yerinde durur, disk onlara değene kadar
+       büyür ya da küçülür. <b>Yarıçap fonksiyonun değil, (fonksiyon, merkez)
+       çiftinin özelliğidir.</b></p>
+  </div>
+  <div class="aciklama uyari">
+    <h4>Sonlu N'in dürüst payı</h4>
+    <p>Beyaz sınır teorik çemberin sistematik olarak biraz içinde kalır (%5–8).
+       Bu bir hata değil: yakınsama ancak N→∞ limitinde tamdır. Aynı sebeple
+       <code>ln(1+z)</code> için sınır sonlu N'de gözle görülür biçimde çember
+       <b>değildir</b> — o fonksiyonun katsayıları <code>1/n</code> gibi cebirsel
+       azalır, kutuplu fonksiyonlardaki geometrik azalmanın aksine, ve sınır
+       daha yavaş sıkışır. N'i büyüterek ikisini de izleyebilirsin.</p>
+  </div>
+</section>
+
+<section id="sarkac" class="sekme">
+  <div class="duzen">
+    <div class="kontrol">
+      <h3>Ayarlar</h3>
+      <div class="alan">
+        <label for="s-t0">Genlik θ₀ <span class="deger" id="s-t0-d">45°</span></label>
+        <input type="range" id="s-t0" min="5" max="170" step="1" value="45">
+      </div>
+      <div class="alan">
+        <label><input type="checkbox" id="s-oynat" checked> Animasyonu oynat</label>
+      </div>
+      <p style="font-size:13px;color:var(--sonuk);margin:14px 0 0">
+        Solda tam denklem <code>θ̈ = −(g/L)·sin θ</code>, sağda harmonik
+        yaklaşım <code>θ̈ = −(g/L)·θ</code>. İkisi aynı anda ve aynı
+        genlikle başlar.</p>
+    </div>
+    <div class="tuval">
+      <canvas id="s-tuval" width="1600" height="620"></canvas>
+      <div class="efsane">
+        <span><i style="background:#e8c84d"></i>tam denklem</span>
+        <span><i style="background:#4db2e8"></i>harmonik yaklaşım</span>
+      </div>
+    </div>
+  </div>
+  <div class="olcu" id="s-olcu"></div>
+  <div class="tuval" style="margin-top:16px">
+    <canvas id="s-grafik" width="1600" height="560"></canvas>
+  </div>
+  <div class="aciklama">
+    <h4>Atılan terim nereye gitti?</h4>
+    <p>«Küçük açı yaklaşımı» masum bir sadeleştirme gibi sunulur. Değil:
+       <code>sin θ = θ − θ³/6 + θ⁵/120 − ⋯</code> serisini ilk terimde
+       kesmektir ve atılan <code>−θ³/6</code> yok olmaz — <b>periyotta geri
+       döner</b>. Harmonik osilatörde periyot genlikten bağımsızdır
+       (izokronizm); gerçek sarkaçta değildir.</p>
+    <p>Genliği büyüt: iki sarkaç önce birlikte gider, sonra faz farkı birikir.
+       150°'de harmonik tahmin <b>%76 yanlıştır</b>.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  Bu sayfa <code>taylor-lab</code> deposunun web katmanıdır. Sayısal sonuçlar
+  <code>02-python/src/</code> altındaki betiklerle bağımsız olarak üretilmiş ve
+  doğrulanmıştır; buradaki hesaplar tarayıcıda, aynı formüllerle yeniden yapılır.
+</footer>
+
+<script>
+"use strict";
+
+/* ===================================================================
+   1. Kompleks aritmetik
+   =================================================================== */
+const C = {
+  re: (a) => a[0], im: (a) => a[1],
+  mk: (x, y) => [x, y || 0],
+  ekle: (a, b) => [a[0] + b[0], a[1] + b[1]],
+  cikar: (a, b) => [a[0] - b[0], a[1] - b[1]],
+  carp: (a, b) => [a[0] * b[0] - a[1] * b[1], a[0] * b[1] + a[1] * b[0]],
+  bol: (a, b) => {
+    const d = b[0] * b[0] + b[1] * b[1];
+    return [(a[0] * b[0] + a[1] * b[1]) / d, (a[1] * b[0] - a[0] * b[1]) / d];
+  },
+  mutlak: (a) => Math.hypot(a[0], a[1]),
+  us: (a, n) => { // a^n, n tam sayı >= 0
+    let r = [1, 0];
+    for (let i = 0; i < n; i++) r = C.carp(r, a);
+    return r;
+  },
+  exp: (a) => { const e = Math.exp(a[0]); return [e * Math.cos(a[1]), e * Math.sin(a[1])]; },
+  log: (a) => [Math.log(Math.hypot(a[0], a[1])), Math.atan2(a[1], a[0])],
+  sin: (a) => [Math.sin(a[0]) * Math.cosh(a[1]), Math.cos(a[0]) * Math.sinh(a[1])],
+  cos: (a) => [Math.cos(a[0]) * Math.cosh(a[1]), -Math.sin(a[0]) * Math.sinh(a[1])],
+  sqrt: (a) => {
+    const r = Math.hypot(a[0], a[1]), t = Math.atan2(a[1], a[0]) / 2, s = Math.sqrt(r);
+    return [s * Math.cos(t), s * Math.sin(t)];
+  },
+};
+
+/* ===================================================================
+   2. Fonksiyon kataloğu
+
+   Katsayılar SAYISAL TÜREVLE DEĞİL, her fonksiyon için kapalı biçimle
+   üretilir. Sebep: sayısal türev yüksek mertebede çöker ve bu sayfanın
+   iddiası tam olarak yüksek mertebelerin davranışıdır. Kapalı biçimler
+   a merkezli açılımdan gelir, yani merkez kaydırma da tamdır.
+   =================================================================== */
+
+const fakt = [1];
+for (let n = 1; n <= 200; n++) fakt[n] = fakt[n - 1] * n;
+
+const KATALOG = {
+  "exp(x)": {
+    etiket: "eˣ",
+    f: (z) => C.exp(z),
+    // f^(n)(a) = e^a  =>  c_n = e^a / n!
+    kats: (a, N) => {
+      const ea = C.exp(a), out = [];
+      for (let n = 0; n <= N; n++) out.push([ea[0] / fakt[n], ea[1] / fakt[n]]);
+      return out;
+    },
+    tekillikler: () => [],
+    R: () => Infinity,
+  },
+  "sin(x)": {
+    etiket: "sin x",
+    f: (z) => C.sin(z),
+    // f^(n)(a) döngüsü: sin, cos, -sin, -cos
+    kats: (a, N) => {
+      const s = C.sin(a), c = C.cos(a), dizi = [s, c, [-s[0], -s[1]], [-c[0], -c[1]]], out = [];
+      for (let n = 0; n <= N; n++) {
+        const d = dizi[n % 4];
+        out.push([d[0] / fakt[n], d[1] / fakt[n]]);
+      }
+      return out;
+    },
+    tekillikler: () => [],
+    R: () => Infinity,
+  },
+  "cos(x)": {
+    etiket: "cos x",
+    f: (z) => C.cos(z),
+    kats: (a, N) => {
+      const s = C.sin(a), c = C.cos(a), dizi = [c, [-s[0], -s[1]], [-c[0], -c[1]], s], out = [];
+      for (let n = 0; n <= N; n++) {
+        const d = dizi[n % 4];
+        out.push([d[0] / fakt[n], d[1] / fakt[n]]);
+      }
+      return out;
+    },
+    tekillikler: () => [],
+    R: () => Infinity,
+  },
+  "1/(1-x)": {
+    etiket: "1/(1−x)",
+    f: (z) => C.bol([1, 0], C.cikar([1, 0], z)),
+    // 1/(1-z) = 1/((1-a) - (z-a)) => c_n = 1/(1-a)^(n+1)
+    kats: (a, N) => {
+      const u = C.cikar([1, 0], a), out = [];
+      let p = u;                       // (1-a)^(n+1)
+      for (let n = 0; n <= N; n++) { out.push(C.bol([1, 0], p)); p = C.carp(p, u); }
+      return out;
+    },
+    tekillikler: () => [[1, 0]],
+    R: (a) => C.mutlak(C.cikar([1, 0], a)),
+  },
+  "1/(1+x^2)": {
+    etiket: "1/(1+x²)",
+    f: (z) => C.bol([1, 0], C.ekle([1, 0], C.carp(z, z))),
+    // 1/(1+z^2) = (1/2i)[1/(z-i) - 1/(z+i)]
+    // 1/(z-i) = 1/((a-i)+(z-a)) = Σ (-1)^n (z-a)^n / (a-i)^(n+1)
+    kats: (a, N) => {
+      const ai = C.cikar(a, [0, 1]), am = C.ekle(a, [0, 1]), iki_i = [0, 2], out = [];
+      let p1 = ai, p2 = am;            // (a∓i)^(n+1)
+      for (let n = 0; n <= N; n++) {
+        const t = C.cikar(C.bol([1, 0], p1), C.bol([1, 0], p2));
+        const c = C.bol(t, iki_i);
+        const isaret = (n % 2 === 0) ? 1 : -1;
+        out.push([isaret * c[0], isaret * c[1]]);
+        p1 = C.carp(p1, ai); p2 = C.carp(p2, am);
+      }
+      return out;
+    },
+    tekillikler: () => [[0, 1], [0, -1]],
+    R: (a) => Math.min(C.mutlak(C.cikar(a, [0, 1])), C.mutlak(C.cikar(a, [0, -1]))),
+  },
+  "ln(1+x)": {
+    etiket: "ln(1+x)",
+    f: (z) => C.log(C.ekle([1, 0], z)),
+    // ln(1+z) = ln(1+a) + Σ_{n>=1} (-1)^(n+1) (z-a)^n / (n (1+a)^n)
+    kats: (a, N) => {
+      const u = C.ekle([1, 0], a), out = [C.log(u)];
+      let p = u;
+      for (let n = 1; n <= N; n++) {
+        const c = C.bol([1, 0], [p[0] * n, p[1] * n]);
+        const isaret = (n % 2 === 1) ? 1 : -1;
+        out.push([isaret * c[0], isaret * c[1]]);
+        p = C.carp(p, u);
+      }
+      return out;
+    },
+    tekillikler: () => [[-1, 0]],
+    R: (a) => C.mutlak(C.ekle(a, [1, 0])),
+  },
+  "sqrt(1+x)": {
+    etiket: "√(1+x)",
+    f: (z) => C.sqrt(C.ekle([1, 0], z)),
+    // (1+z)^(1/2) etrafında a: c_n = C(1/2,n) (1+a)^(1/2-n)
+    kats: (a, N) => {
+      const u = C.ekle([1, 0], a), kok = C.sqrt(u), out = [];
+      let binom = 1;                   // C(1/2, n)
+      let p = [1, 0];                  // (1+a)^n
+      for (let n = 0; n <= N; n++) {
+        // c_n = binom * (1+a)^(1/2) / (1+a)^n
+        const c = C.bol([kok[0] * binom, kok[1] * binom], p);
+        out.push(c);
+        binom *= (0.5 - n) / (n + 1);
+        p = C.carp(p, u);
+      }
+      return out;
+    },
+    tekillikler: () => [[-1, 0]],
+    R: (a) => C.mutlak(C.ekle(a, [1, 0])),
+  },
+};
+
+/* Horner ile P_N(z) — katsayılar (z-a) kuvvetlerine göre */
+function polinom(kats, a, z) {
+  const u = C.cikar(z, a);
+  let s = [0, 0];
+  for (let n = kats.length - 1; n >= 0; n--) s = C.ekle(C.carp(s, u), kats[n]);
+  return s;
+}
+
+/* Türkçe sayı biçimi */
+const bicim = (x, d = 4) =>
+  (!isFinite(x)) ? "∞" : x.toLocaleString("tr-TR", { minimumFractionDigits: d, maximumFractionDigits: d });
+
+/* ===================================================================
+   3. Sekme anahtarı
+   =================================================================== */
+document.querySelectorAll("nav button").forEach((b) => {
+  b.onclick = () => {
+    document.querySelectorAll("nav button").forEach((x) => x.classList.remove("aktif"));
+    document.querySelectorAll(".sekme").forEach((x) => x.classList.remove("aktif"));
+    b.classList.add("aktif");
+    document.getElementById(b.dataset.sekme).classList.add("aktif");
+    if (b.dataset.sekme === "kompleks") kCiz();
+    if (b.dataset.sekme === "sarkac") sCiz();
+  };
+});
+
+/* Ortak eksen yardımcıları */
+function eksenCiz(ct, K, xmin, xmax, ymin, ymax, kenar) {
+  const G = (x) => kenar.l + (x - xmin) / (xmax - xmin) * (K.width - kenar.l - kenar.r);
+  const D = (y) => K.height - kenar.b - (y - ymin) / (ymax - ymin) * (K.height - kenar.t - kenar.b);
+  ct.fillStyle = "#0f1419"; ct.fillRect(0, 0, K.width, K.height);
+
+  // ızgara
+  ct.strokeStyle = "#232e3b"; ct.lineWidth = 1; ct.font = "20px system-ui";
+  ct.fillStyle = "#6f8098"; ct.textAlign = "center"; ct.textBaseline = "top";
+  const adimX = guzelAdim(xmax - xmin), adimY = guzelAdim(ymax - ymin);
+  for (let x = Math.ceil(xmin / adimX) * adimX; x <= xmax; x += adimX) {
+    ct.beginPath(); ct.moveTo(G(x), kenar.t); ct.lineTo(G(x), K.height - kenar.b); ct.stroke();
+    if (Math.abs(x) > 1e-9) ct.fillText(bicim(x, adimX < 1 ? 1 : 0), G(x), K.height - kenar.b + 8);
+  }
+  ct.textAlign = "right"; ct.textBaseline = "middle";
+  for (let y = Math.ceil(ymin / adimY) * adimY; y <= ymax; y += adimY) {
+    ct.beginPath(); ct.moveTo(kenar.l, D(y)); ct.lineTo(K.width - kenar.r, D(y)); ct.stroke();
+    if (Math.abs(y) > 1e-9) ct.fillText(bicim(y, adimY < 1 ? 1 : 0), kenar.l - 10, D(y));
+  }
+  // eksenler
+  ct.strokeStyle = "#4a5a6e"; ct.lineWidth = 2;
+  if (ymin < 0 && ymax > 0) { ct.beginPath(); ct.moveTo(kenar.l, D(0)); ct.lineTo(K.width - kenar.r, D(0)); ct.stroke(); }
+  if (xmin < 0 && xmax > 0) { ct.beginPath(); ct.moveTo(G(0), kenar.t); ct.lineTo(G(0), K.height - kenar.b); ct.stroke(); }
+  return { G, D };
+}
+function guzelAdim(aralik) {
+  const ham = aralik / 8, us = Math.pow(10, Math.floor(Math.log10(ham))), n = ham / us;
+  return us * (n < 1.5 ? 1 : n < 3 ? 2 : n < 7 ? 5 : 10);
+}
+
+/* ===================================================================
+   4. Panel 1 — yaklaşım ve hata
+   =================================================================== */
+const yFn = document.getElementById("y-fn");
+Object.keys(KATALOG).forEach((k) => {
+  const o = document.createElement("option"); o.value = k; o.textContent = KATALOG[k].etiket; yFn.append(o);
+});
+yFn.value = "1/(1+x^2)";
+
+function yCiz() {
+  const ad = yFn.value, F = KATALOG[ad];
+  const N = +document.getElementById("y-n").value;
+  const a = +document.getElementById("y-a").value;
+  document.getElementById("y-n-d").textContent = N;
+  document.getElementById("y-a-d").textContent = bicim(a, 2);
+
+  const K = document.getElementById("y-tuval"), ct = K.getContext("2d");
+  const kenar = { l: 70, r: 30, t: 30, b: 50 };
+  const xmin = -3.2, xmax = 3.2, ymin = -3, ymax = 3;
+  const { G, D } = eksenCiz(ct, K, xmin, xmax, ymin, ymax, kenar);
+
+  const kats = F.kats([a, 0], N);
+  const R = F.R([a, 0]);
+
+  // yakınsaklık aralığı
+  if (document.getElementById("y-disk").checked && isFinite(R)) {
+    ct.fillStyle = "rgba(77,178,232,0.07)";
+    ct.fillRect(G(a - R), kenar.t, G(a + R) - G(a - R), K.height - kenar.t - kenar.b);
+    ct.strokeStyle = "rgba(77,178,232,0.5)"; ct.lineWidth = 2; ct.setLineDash([10, 8]);
+    [a - R, a + R].forEach((x) => {
+      if (x > xmin && x < xmax) { ct.beginPath(); ct.moveTo(G(x), kenar.t); ct.lineTo(G(x), K.height - kenar.b); ct.stroke(); }
+    });
+    ct.setLineDash([]);
+  }
+
+  const ADIM = 1400;
+  const ornek = [];
+  for (let i = 0; i <= ADIM; i++) {
+    const x = xmin + (xmax - xmin) * i / ADIM;
+    const z = [x, 0];
+    let fv = NaN, pv = NaN;
+    // tanım kümesi dışına düşenler atlanır (ör. ln(1+x), x<=-1)
+    const gecerli = !((ad === "ln(1+x)" && x <= -1) || (ad === "sqrt(1+x)" && x < -1) || (ad === "1/(1-x)" && Math.abs(x - 1) < 1e-9));
+    if (gecerli) { fv = F.f(z)[0]; }
+    pv = polinom(kats, [a, 0], z)[0];
+    ornek.push({ x, fv, pv });
+  }
+
+  // f(x)
+  ct.strokeStyle = "#e8c84d"; ct.lineWidth = 4; ct.beginPath();
+  let kalem = false;
+  for (const o of ornek) {
+    if (!isFinite(o.fv) || Math.abs(o.fv) > 50) { kalem = false; continue; }
+    if (!kalem) { ct.moveTo(G(o.x), D(o.fv)); kalem = true; } else ct.lineTo(G(o.x), D(o.fv));
+  }
+  ct.stroke();
+
+  // P_N(x)
+  ct.strokeStyle = "#4db2e8"; ct.lineWidth = 4; ct.beginPath();
+  kalem = false;
+  for (const o of ornek) {
+    if (!isFinite(o.pv) || Math.abs(o.pv) > 50) { kalem = false; continue; }
+    if (!kalem) { ct.moveTo(G(o.x), D(o.pv)); kalem = true; } else ct.lineTo(G(o.x), D(o.pv));
+  }
+  ct.stroke();
+
+  // hata eğrisi: log10|f-P| ekranın alt şeridine sıkıştırılır
+  if (document.getElementById("y-hata").checked) {
+    const alt = ymin + 0.08 * (ymax - ymin), ust = ymin + 0.9 * (ymax - ymin);
+    const LMIN = -16, LMAX = 2;
+    ct.strokeStyle = "#e8567a"; ct.lineWidth = 3; ct.globalAlpha = 0.85; ct.beginPath();
+    kalem = false;
+    for (const o of ornek) {
+      if (!isFinite(o.fv) || !isFinite(o.pv)) { kalem = false; continue; }
+      const L = Math.log10(Math.max(Math.abs(o.fv - o.pv), 1e-17));
+      const y = alt + (Math.min(Math.max(L, LMIN), LMAX) - LMIN) / (LMAX - LMIN) * (ust - alt);
+      if (!kalem) { ct.moveTo(G(o.x), D(y)); kalem = true; } else ct.lineTo(G(o.x), D(y));
+    }
+    ct.stroke(); ct.globalAlpha = 1;
+  }
+
+  // merkez
+  ct.fillStyle = "#dde5ee"; ct.beginPath(); ct.arc(G(a), D(0), 8, 0, 7); ct.fill();
+
+  // ölçüler
+  const hataAt = (x) => {
+    const fv = F.f([x, 0])[0], pv = polinom(kats, [a, 0], [x, 0])[0];
+    return Math.abs(fv - pv);
+  };
+  const e1 = hataAt(a + (isFinite(R) ? 0.5 * R : 0.5));
+  const e2 = hataAt(a + (isFinite(R) ? 1.5 * R : 3.0));
+  document.getElementById("y-olcu").innerHTML = `
+    <div><span>yakınsaklık yarıçapı R</span><b>${isFinite(R) ? bicim(R, 4) : "∞"}</b></div>
+    <div><span>hata, diskin içinde</span><b>${e1.toExponential(2)}</b></div>
+    <div><span>hata, diskin dışında</span><b>${isFinite(R) ? e2.toExponential(2) : "—"}</b></div>
+    <div><span>terim sayısı</span><b>${N + 1}</b></div>`;
+}
+["y-fn", "y-n", "y-a", "y-hata", "y-disk"].forEach((id) =>
+  document.getElementById(id).addEventListener("input", yCiz));
+
+/* ===================================================================
+   5. Panel 2 — kompleks düzlemde hata haritası
+
+   Çizilen büyüklük L_N(z) = (1/N)·log10|f(z) - P_N(z)|.
+   |f - P_N| ~ C·(|z-a|/R)^(N+1) olduğundan L_N -> log10(|z-a|/R);
+   yani L_N'nin İŞARETİ yakınsaklığı söyler, sıfır düzeyi de |z-a| = R
+   çemberidir. Disk çizilmez, veriden doğar.
+   =================================================================== */
+const kFn = document.getElementById("k-fn");
+Object.keys(KATALOG).forEach((k) => {
+  const o = document.createElement("option"); o.value = k; o.textContent = KATALOG[k].etiket; kFn.append(o);
+});
+kFn.value = "1/(1+x^2)";
+
+/* Iraksak/yakınsak renk skalası: yeşil (negatif) -> beyaz (0) -> kırmızı (pozitif) */
+function renk(L) {
+  const t = Math.max(-1, Math.min(1, L / 0.6));      // ±0.6 dekad doyum
+  if (t < 0) { const s = -t; return [45 + 210 * (1 - s), 106 + 134 * (1 - s), 79 + 176 * (1 - s)]; }
+  const s = t; return [157 + 98 * (1 - s), 36 + 204 * (1 - s), 73 + 167 * (1 - s)];
+}
+
+function kCiz() {
+  const ad = kFn.value, F = KATALOG[ad];
+  const N = +document.getElementById("k-n").value;
+  const ar = +document.getElementById("k-ar").value;
+  const ai = +document.getElementById("k-ai").value;
+  document.getElementById("k-n-d").textContent = N;
+  document.getElementById("k-ar-d").textContent = bicim(ar, 2);
+  document.getElementById("k-ai-d").textContent = bicim(ai, 2);
+
+  const a = [ar, ai];
+  const K = document.getElementById("k-tuval"), ct = K.getContext("2d");
+  const W = K.width, H = K.height;
+  const PENCERE = 3.0;                                // [-3,3] x [-3,3]
+  const px2z = (i, j) => [-PENCERE + 2 * PENCERE * i / (W - 1), PENCERE - 2 * PENCERE * j / (H - 1)];
+  const z2px = (z) => [(z[0] + PENCERE) / (2 * PENCERE) * (W - 1), (PENCERE - z[1]) / (2 * PENCERE) * (H - 1)];
+
+  const kats = F.kats(a, N);
+  const img = ct.createImageData(W, H);
+  const d = img.data;
+
+  // sıfır düzeyini bulmak için L değerlerini saklıyoruz
+  const L = new Float32Array(W * H);
+
+  for (let j = 0; j < H; j++) {
+    for (let i = 0; i < W; i++) {
+      const z = px2z(i, j);
+      let fv;
+      try { fv = F.f(z); } catch (e) { fv = [NaN, NaN]; }
+      const pv = polinom(kats, a, z);
+      let l;
+      if (!isFinite(fv[0]) || !isFinite(fv[1])) {
+        l = NaN;
+      } else {
+        const h = C.mutlak(C.cikar(fv, pv));
+        l = Math.log10(Math.max(h, 1e-300)) / N;
+      }
+      L[j * W + i] = l;
+      const k = (j * W + i) * 4;
+      if (isNaN(l)) { d[k] = 30; d[k + 1] = 36; d[k + 2] = 45; d[k + 3] = 255; }
+      else { const c = renk(l); d[k] = c[0]; d[k + 1] = c[1]; d[k + 2] = c[2]; d[k + 3] = 255; }
+    }
+  }
+  ct.putImageData(img, 0, 0);
+
+  // --- sıfır düzeyi (veriden çıkan sınır): işaret değiştiren pikselleri boya
+  ct.fillStyle = "#ffffff";
+  let enYakin = Infinity;
+  for (let j = 1; j < H - 1; j++) {
+    for (let i = 1; i < W - 1; i++) {
+      const c0 = L[j * W + i];
+      if (isNaN(c0)) continue;
+      const sag = L[j * W + i + 1], alt = L[(j + 1) * W + i];
+      if ((!isNaN(sag) && c0 * sag < 0) || (!isNaN(alt) && c0 * alt < 0)) {
+        ct.fillRect(i, j, 2, 2);
+        const z = px2z(i, j), r = C.mutlak(C.cikar(z, a));
+        if (r < enYakin) enYakin = r;
+      }
+    }
+  }
+
+  // --- teorik çember
+  const R = F.R(a);
+  if (document.getElementById("k-cember").checked && isFinite(R)) {
+    const m = z2px(a), olcek = (W - 1) / (2 * PENCERE);
+    ct.strokeStyle = "#4db2e8"; ct.lineWidth = 3; ct.setLineDash([12, 9]);
+    ct.beginPath(); ct.arc(m[0], m[1], R * olcek, 0, 7); ct.stroke(); ct.setLineDash([]);
+  }
+
+  // --- tekillikler
+  if (document.getElementById("k-tek").checked) {
+    ct.fillStyle = "#e8567a"; ct.strokeStyle = "#0f1419"; ct.lineWidth = 3;
+    F.tekillikler().forEach((s) => {
+      const p = z2px(s);
+      ct.beginPath(); ct.arc(p[0], p[1], 11, 0, 7); ct.fill(); ct.stroke();
+    });
+  }
+
+  // --- merkez
+  const m = z2px(a);
+  ct.fillStyle = "#ffffff"; ct.strokeStyle = "#0f1419"; ct.lineWidth = 3;
+  ct.beginPath(); ct.arc(m[0], m[1], 9, 0, 7); ct.fill(); ct.stroke();
+
+  // --- eksen etiketleri
+  ct.fillStyle = "rgba(221,229,238,0.75)"; ct.font = "26px system-ui";
+  ct.textAlign = "left"; ct.textBaseline = "top";
+  ct.fillText("Re z", W - 90, H - 40);
+  ct.fillText("Im z", 14, 12);
+
+  const sapma = (isFinite(R) && isFinite(enYakin)) ? (enYakin / R - 1) * 100 : NaN;
+  document.getElementById("k-olcu").innerHTML = `
+    <div><span>teorik R (en yakın tekillik)</span><b>${isFinite(R) ? bicim(R, 4) : "∞"}</b></div>
+    <div><span>haritadan okunan R</span><b>${isFinite(enYakin) ? bicim(enYakin, 4) : "—"}</b></div>
+    <div><span>sonlu N sapması</span><b>${isFinite(sapma) ? bicim(sapma, 1) + " %" : "—"}</b></div>
+    <div><span>derece N</span><b>${N}</b></div>`;
+}
+["k-fn", "k-n", "k-ar", "k-ai", "k-cember", "k-tek"].forEach((id) =>
+  document.getElementById(id).addEventListener("input", kCiz));
+
+/* ===================================================================
+   6. Panel 3 — sarkaç: atılan terimin faturası
+
+   Solda tam denklem θ'' = -(g/L) sin θ, sağda harmonik yaklaşım
+   θ'' = -(g/L) θ. İkisi RK4 ile aynı adımda entegre edilir.
+   Periyot, θ'nin sıfır geçişleri doğrusal ara değerlemeyle bulunarak
+   ölçülür (sarkac.py'daki olay tabanlı yöntemin karşılığı).
+   =================================================================== */
+const G_YER = 9.80665, L_BOY = 1.0;
+const T0 = 2 * Math.PI * Math.sqrt(L_BOY / G_YER);
+
+/* RK4 bir adım: y = [θ, ω] */
+function rk4(y, h, ivme) {
+  const f = (s) => [s[1], ivme(s[0])];
+  const k1 = f(y);
+  const k2 = f([y[0] + h / 2 * k1[0], y[1] + h / 2 * k1[1]]);
+  const k3 = f([y[0] + h / 2 * k2[0], y[1] + h / 2 * k2[1]]);
+  const k4 = f([y[0] + h * k3[0], y[1] + h * k3[1]]);
+  return [
+    y[0] + h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]),
+    y[1] + h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]),
+  ];
+}
+const ivmeTam = (t) => -(G_YER / L_BOY) * Math.sin(t);
+const ivmeHar = (t) => -(G_YER / L_BOY) * t;
+
+/* Tam periyodu sıfır geçişlerinden ölç: θ0'dan başlayıp ilk iki geçiş
+   yarım periyottur; T = 2 × (ikinci geçiş - birinci geçiş) değil,
+   T = 2 × (birinci geçişten ikinci geçişe) ... aslında θ0'dan ilk
+   geçiş çeyrek periyottur, bu yüzden T = 4 × ilk geçiş zamanı. */
+function periyotOlc(theta0, ivme) {
+  const h = 1e-5;
+  let y = [theta0, 0], t = 0;
+  for (let i = 0; i < 4000000; i++) {
+    const yeni = rk4(y, h, ivme);
+    if (y[0] > 0 && yeni[0] <= 0) {
+      // doğrusal ara değerleme ile geçiş anı
+      const oran = y[0] / (y[0] - yeni[0]);
+      return 4 * (t + oran * h);
+    }
+    y = yeni; t += h;
+  }
+  return NaN;
+}
+
+/* Eliptik integral K(m) — AGM ile (kapalı biçim karşılaştırması) */
+function ellipK(m) {
+  let a = 1, b = Math.sqrt(1 - m);
+  for (let i = 0; i < 60; i++) { const na = (a + b) / 2, nb = Math.sqrt(a * b); a = na; b = nb; }
+  return Math.PI / (2 * a);
+}
+const periyotTam = (t0) => 4 * Math.sqrt(L_BOY / G_YER) * ellipK(Math.pow(Math.sin(t0 / 2), 2));
+
+let sDurum = null, sSonZaman = 0, sAnim = null;
+
+function sSifirla() {
+  const derece = +document.getElementById("s-t0").value;
+  const t0 = derece * Math.PI / 180;
+  sDurum = { tam: [t0, 0], har: [t0, 0], t: 0, izTam: [], izHar: [] };
+}
+
+function sCiz() {
+  const derece = +document.getElementById("s-t0").value;
+  document.getElementById("s-t0-d").textContent = derece + "°";
+  const t0 = derece * Math.PI / 180;
+
+  // --- ölçümler (ağır; yalnızca genlik değişince)
+  if (sCiz.sonDerece !== derece) {
+    sCiz.sonDerece = derece;
+    const Tolc = periyotOlc(t0, ivmeTam);
+    const Tkapali = periyotTam(t0);
+    const Tyak1 = T0 * (1 + t0 * t0 / 16);
+    const sapma = (Tolc / T0 - 1) * 100;
+    const fark = Math.abs(Tolc - Tkapali) / Tkapali * 100;
+    document.getElementById("s-olcu").innerHTML = `
+      <div><span>T₀ (harmonik)</span><b>${bicim(T0, 6)} s</b></div>
+      <div><span>ölçülen T (tam denklem)</span><b>${bicim(Tolc, 6)} s</b></div>
+      <div><span>T₀(1 + θ₀²/16)</span><b>${bicim(Tyak1, 6)} s</b></div>
+      <div><span>harmoniğe göre sapma</span><b>${bicim(sapma, 2)} %</b></div>
+      <div><span>ölçüm ↔ eliptik kapalı biçim</span><b>${fark.toExponential(1)} %</b></div>`;
+    sSifirla();
+    sGrafikCiz();
+  }
+  if (!sDurum) sSifirla();
+
+  const K = document.getElementById("s-tuval"), ct = K.getContext("2d");
+  ct.fillStyle = "#0f1419"; ct.fillRect(0, 0, K.width, K.height);
+
+  const ciz = (merkezX, durum, renkG, ad) => {
+    const OX = merkezX, OY = 90, UZ = 380;
+    const x = OX + UZ * Math.sin(durum[0]), y = OY + UZ * Math.cos(durum[0]);
+    ct.strokeStyle = "#39465a"; ct.lineWidth = 3;
+    ct.beginPath(); ct.moveTo(OX - 60, OY); ct.lineTo(OX + 60, OY); ct.stroke();
+    // referans: başlangıç genliği
+    ct.strokeStyle = "rgba(255,255,255,0.10)"; ct.lineWidth = 2; ct.setLineDash([8, 8]);
+    ct.beginPath(); ct.arc(OX, OY, UZ, Math.PI / 2 - t0, Math.PI / 2 + t0); ct.stroke();
+    ct.setLineDash([]);
+    ct.strokeStyle = renkG; ct.lineWidth = 5;
+    ct.beginPath(); ct.moveTo(OX, OY); ct.lineTo(x, y); ct.stroke();
+    ct.fillStyle = renkG; ct.beginPath(); ct.arc(x, y, 30, 0, 7); ct.fill();
+    ct.fillStyle = "#8b9bb0"; ct.font = "26px system-ui"; ct.textAlign = "center";
+    ct.fillText(ad, OX, 46);
+    ct.fillStyle = "#dde5ee"; ct.font = "24px system-ui";
+    ct.fillText((durum[0] * 180 / Math.PI).toFixed(1) + "°", OX, 560);
+  };
+  ciz(K.width * 0.28, sDurum.tam, "#e8c84d", "tam denklem");
+  ciz(K.width * 0.72, sDurum.har, "#4db2e8", "harmonik yaklaşım");
+
+  // faz farkı
+  const dfark = Math.abs(sDurum.tam[0] - sDurum.har[0]) * 180 / Math.PI;
+  ct.fillStyle = "#8b9bb0"; ct.font = "24px system-ui"; ct.textAlign = "center";
+  ct.fillText(`t = ${sDurum.t.toFixed(2)} s     açı farkı = ${dfark.toFixed(1)}°`, K.width / 2, 600);
+}
+
+/* Periyot–genlik grafiği */
+function sGrafikCiz() {
+  const K = document.getElementById("s-grafik"), ct = K.getContext("2d");
+  const kenar = { l: 90, r: 40, t: 40, b: 70 };
+  const { G, D } = eksenCiz(ct, K, 0, 175, 1.9, 4.2, kenar);
+
+  // T0 (harmonik) — yatay çizgi: izokronizm
+  ct.strokeStyle = "#4db2e8"; ct.lineWidth = 4;
+  ct.beginPath(); ct.moveTo(G(0), D(T0)); ct.lineTo(G(175), D(T0)); ct.stroke();
+
+  // tam periyot (eliptik)
+  ct.strokeStyle = "#e8c84d"; ct.lineWidth = 4; ct.beginPath();
+  for (let d = 1; d <= 175; d += 1) {
+    const T = periyotTam(d * Math.PI / 180);
+    if (d === 1) ct.moveTo(G(d), D(T)); else ct.lineTo(G(d), D(T));
+  }
+  ct.stroke();
+
+  // birinci Taylor düzeltmesi T0(1+θ²/16)
+  ct.strokeStyle = "#6ece8a"; ct.lineWidth = 3; ct.setLineDash([12, 8]); ct.beginPath();
+  for (let d = 1; d <= 175; d += 1) {
+    const t = d * Math.PI / 180, T = T0 * (1 + t * t / 16);
+    if (d === 1) ct.moveTo(G(d), D(T)); else ct.lineTo(G(d), D(T));
+  }
+  ct.stroke(); ct.setLineDash([]);
+
+  // seçili genlik
+  const d0 = +document.getElementById("s-t0").value;
+  ct.strokeStyle = "rgba(255,255,255,0.35)"; ct.lineWidth = 2;
+  ct.beginPath(); ct.moveTo(G(d0), kenar.t); ct.lineTo(G(d0), K.height - kenar.b); ct.stroke();
+
+  ct.fillStyle = "#8b9bb0"; ct.font = "24px system-ui"; ct.textAlign = "center";
+  ct.fillText("genlik θ₀ (derece)", K.width / 2, K.height - 28);
+  ct.save(); ct.translate(26, K.height / 2); ct.rotate(-Math.PI / 2);
+  ct.fillText("periyot T (s)", 0, 0); ct.restore();
+
+  ct.textAlign = "left"; ct.font = "22px system-ui";
+  ct.fillStyle = "#4db2e8"; ct.fillText("harmonik: T₀ sabit (izokronizm)", G(4), D(2.06));
+  ct.fillStyle = "#e8c84d"; ct.fillText("tam denklem (eliptik)", G(95), D(3.1));
+  ct.fillStyle = "#6ece8a"; ct.fillText("T₀(1 + θ₀²/16)", G(95), D(2.45));
+}
+
+function sAdim() {
+  if (document.getElementById("s-oynat").checked && sDurum) {
+    const h = 0.002, adet = 8;               // gerçek zamana yakın
+    for (let i = 0; i < adet; i++) {
+      sDurum.tam = rk4(sDurum.tam, h, ivmeTam);
+      sDurum.har = rk4(sDurum.har, h, ivmeHar);
+      sDurum.t += h;
+    }
+  }
+  if (document.getElementById("sarkac").classList.contains("aktif")) sCiz();
+  sAnim = requestAnimationFrame(sAdim);
+}
+document.getElementById("s-t0").addEventListener("input", sCiz);
+
+/* ===================================================================
+   7. Başlat
+   =================================================================== */
+yCiz();
+kCiz();
+sCiz();
+sAdim();
+</script>
+</body>
+</html>

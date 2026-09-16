@@ -4,7 +4,10 @@
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage[turkish]{babel}
+% shorthands=off: Turkce babel ":", "!" ve "=" karakterlerini kisayol yapar;
+% "=" aktif olunca enumitem'in leftmargin=* anahtari cozulemiyordu.
+% Bize yalnizca Turkce heceleme lazim, kisayollar degil.
+\usepackage[shorthands=off,turkish]{babel}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{geometry}
 \usepackage{graphicx}
@@ -26,7 +29,9 @@
 \newtheorem{tanim}[teorem]{Tanım}
 \newtheorem{ornek}[teorem]{Örnek}
 \theoremstyle{remark}
-\newtheorem*{not}{Not}
+% Ortam adi "not" TeX'in \not matematik komutuyla cakisiyordu;
+% ortam acildiginda matematik kipi acilip tum belgeyi bozuyordu.
+\newtheorem*{notkutusu}{Not}
 
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\C}{\mathbb{C}}
@@ -115,12 +120,12 @@ biçimsel serisine $f$'in $a$ merkezli \emph{Taylor serisi} ($a=0$ için
 \emph{Maclaurin serisi}) denir.
 \end{tanim}
 
-\begin{not}
+\begin{notkutusu}
 Bu iki nesne \textbf{aynı şey değildir} ve aralarındaki fark bu metnin
 omurgasıdır. $P_N$ her zaman vardır ve sonludur. $T$ ise yakınsayabilir de
 yakınsamayabilir de; yakınsasa bile $f$'e eşit olmayabilir. Bölüm~\ref{sec:kalan}
 birincisini, Bölüm~\ref{sec:analitik-degil} ikincisini ele alır.
-\end{not}
+\end{notkutusu}
 
 % =====================================================================
 \section{Taylor teoremi ve Lagrange kalanı}\label{sec:kalan}
@@ -287,14 +292,14 @@ yani $L_N$'nin \emph{işareti} doğrudan yakınsaklığı söyler ve $L_N = 0$ d
 tam olarak $|z-a| = R$ çemberidir. Haritada disk kimse çizmeden belirir;
 veriden çıkan sınır ile teorik çember çakışır.
 
-\begin{not}[Sonlu $N$'in dürüst payı]
+\begin{notkutusu}[Sonlu $N$'in dürüst payı]
 Haritadan okunan yarıçaplar teorik değerin sistematik olarak \%5--8 altında
 çıkar. Bu bir hata değil, yukarıdaki yakınsamanın ancak $N\to\infty$ limitinde
 tam olmasının sonucudur. Aynı sebeple $\ln(1+z)$ için sınır eğrisi sonlu
 $N$'de gözle görülür biçimde çember \emph{değildir}: o fonksiyonun katsayıları
 $1/n$ gibi cebirsel azalır (kutuplu fonksiyonlardaki geometrik azalmanın
 aksine), bu yüzden sınır daha yavaş sıkışır.
-\end{not}
+\end{notkutusu}
 
 \subsection*{Cauchy--Hadamard'ın sayısal sınırları}
 
@@ -513,7 +518,7 @@ olur --- normalize edilemez. Kesilme şartı $\lambda = n \in \N$'dir.
 için $\psi(4) \approx -1{,}3\times 10^{-2}$ (sönüyor), $\lambda = 2{,}5$ için
 $\psi(4) \approx 1{,}4\times 10^{1}$ (patlıyor).
 
-\begin{not}[İki dürüst uyarı]
+\begin{notkutusu}[İki dürüst uyarı]
 \emph{Birincisi}, kesilmeyen Legendre serisinin $x=1$'deki ıraksaması
 logaritmiktir, yani çok yavaştır; $400$ terimde bile kısmi toplam sonlu bir
 sayı gibi görünür. Sayısal bir deney ıraksamayı ``gösteremez'', yalnızca hiç
@@ -524,7 +529,7 @@ verilemez. $\lambda = 2{,}5$ için Hermite katsayıları da hızla küçülür
 (tıpkı $e^{x^2}$'nin katsayıları gibi) ve eşik yöntemi seriyi yanlışlıkla
 ``kesilmiş'' sayar. Karar rekürans payının cebirsel sıfırlanmasından
 okunmalıdır.
-\end{not}
+\end{notkutusu}
 
 \subsection*{Sonuç}
 

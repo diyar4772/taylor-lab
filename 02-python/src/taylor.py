@@ -474,8 +474,9 @@ if __name__ == "__main__":
     # 3) Lagrange sınırı ihlal ediliyor mu?
     nokta = np.linspace(-2.0, 2.0, 401)
     r = kalan_raporu(sp.sin(x), 0.0, 5, nokta)
-    print(f"sin, a=0, N=5: ihlal={r.ihlal_sayisi}, en kötü oran={r.en_kotu_oran:.4f}")
-    assert r.ihlal_sayisi == 0
+    print(f"sin, a=0, N=5: aday ihlal={r.aday_sayisi}, "
+          f"en kötü oran={r.en_kotu_oran:.4f}")
+    assert r.aday_sayisi == 0
 
     # 4) Yakınsaklık yarıçapı kestirimi
     for ad in ("exp", "ln(1+x)", "1/(1+x^2)"):

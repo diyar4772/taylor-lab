@@ -48,11 +48,21 @@ for KAYIT in "${SAHNELER[@]}"; do
   echo "[$SIRA/6] $SINIF"
   echo "------------------------------------------------------"
 
+  # Render'dan hemen önce bir zaman işareti bırak. Aşağıdaki arama yalnızca
+  # bundan YENİ dosyaları kabul eder; böylece başka bir kalitede daha önce
+  # üretilmiş eski bir .mp4 yanlışlıkla kopyalanamaz.
+  ISARET="$(mktemp)"
+
   if (cd "$BURASI" && manim "$KALITE" --disable_caching "scenes/$DOSYA.py" "$SINIF"); then
     # manim çıktıyı media/videos/<dosya>/<çözünürlük>/<Sınıf>.mp4 yazar;
     # çözünürlük klasörünün adı kaliteye göre değiştiği için aranarak bulunur.
-    KAYNAK="$(find "$BURASI/media/videos/$DOSYA" -name "$SINIF.mp4" -type f \
-              -newermt '-1 hour' 2>/dev/null | head -1)"
+    # Birden fazla eşleşme olursa en yenisi alınır (zaman damgasına göre sırala).
+    # head/awk ile boru kesmek `set -o pipefail` altında sorun çıkardığı için
+    # liste önce değişkene alınıp ilk satırı kabuk içinde ayrıştırılıyor.
+    LISTE="$(find "$BURASI/media/videos/$DOSYA" -name "$SINIF.mp4" -type f \
+             -newer "$ISARET" -printf '%T@ %p\n' 2>/dev/null | sort -rn || true)"
+    KAYNAK="${LISTE%%$'\n'*}"   # ilk satır
+    KAYNAK="${KAYNAK#* }"       # baştaki zaman damgasını at (yol boşluk içerebilir)
     if [[ -n "$KAYNAK" ]]; then
       HEDEF="$CIKTI/${SIRA}-${SINIF}.mp4"
       cp "$KAYNAK" "$HEDEF"
@@ -71,6 +81,8 @@ for KAYIT in "${SAHNELER[@]}"; do
     echo "  ✗ RENDER BAŞARISIZ: $SINIF"
     BASARISIZ=$((BASARISIZ + 1))
   fi
+
+  rm -f "$ISARET"
 done
 
 echo ""
