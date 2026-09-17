@@ -34,7 +34,13 @@ manim:
 	bash 01-manim/render.sh
 
 ## LaTeX teorik metni derler, PDF'i out/ altına koyar
+##
+## ÜÇ geçiş: temiz bir dizinden iki geçiş yetmiyor. 1. geçiş sonunda 17
+## "undefined reference" uyarısı, 2. geçiş sonunda hâlâ "Label(s) may have
+## changed. Rerun to get cross-references right." kalıyor. Ancak 3. geçişte
+## içindekiler, çapraz göndermeler ve hyperref yer imleri oturuyor.
 teori:
+	cd 00-teori && pdflatex -interaction=nonstopmode taylor-teori.tex
 	cd 00-teori && pdflatex -interaction=nonstopmode taylor-teori.tex
 	cd 00-teori && pdflatex -interaction=nonstopmode taylor-teori.tex
 	cp 00-teori/taylor-teori.pdf out/taylor-teori.pdf
