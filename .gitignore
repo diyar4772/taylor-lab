@@ -1,8 +1,7 @@
 # Python
 __pycache__/
 *.py[cod]
-.venv/
-.venv313/
+.venv*/
 venv/
 .ipynb_checkpoints/
 
@@ -22,6 +21,7 @@ media/
 *.blg
 
 # Lean
+.lake/
 04-lean/.lake/
 04-lean/lake-packages/
 04-lean/build/
@@ -38,9 +38,16 @@ Thumbs.db
 desktop.ini
 .DS_Store
 
-
-#diğer
-DEVAM.md
-
-# LaTeX ara ciktisi (nihai PDF out/ altinda)
+# LaTeX ara çıktısı (nihai PDF out/ altına kopyalanır)
 00-teori/*.pdf
+
+# MATLAB bu makinede açılışta çöküyor ve çalıştırıldığı dizine
+# crash dump bırakıyor (ENVANTER.md "MATLAB durumu" bölümü).
+matlab_crash_dump.*
+
+# NOT: DEVAM.md bilerek İZLENİYOR, yoksayılmıyor.
+# Bir kez denendi ama kural ölüydü: .gitignore yalnızca izlenmeyen
+# dosyaları etkiler, DEVAM.md ise 491076d'den beri depoda. Gerçekten
+# çıkarmak istenirse:
+#     git rm --cached DEVAM.md
+# ve geçmişten de silmek için ayrıca git-filter-repo gerekir.
