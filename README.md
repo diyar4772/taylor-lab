@@ -242,7 +242,8 @@ bağlantılar dosyayı indirir veya tarayıcıda açar.
 | `.venv313/` | 3.13.15 | **yalnızca manim** | `manim 0.19.0`, `av<14` istiyor; `av`'nin Python 3.14 tekerleği yok, kaynaktan derleme de `libavformat` başlıklarında düşüyor |
 
 ```bash
-cd taylor-lab
+cd taylor-lab                        # deponun klonlandığı dizin
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 source .venv/bin/activate            # sayısal betikler
 export PATH="$HOME/.elan/bin:$PATH"  # lean / lake
 ```
@@ -354,7 +355,7 @@ her iki platformda da aynı çıktı.
 
 | Dosya | İçerik |
 |---|---|
-| `DEVAM.md` | Projenin güncel durumu, sıradaki iş kuyruğu, bilinen tuzaklar. |
+| `DEVAM.md` | Projenin güncel durumu, ortam kurulumu ve bilinen tuzaklar. |
 | `ENVANTER.md` | Windows ve Fedora makinelerinin araç envanteri; neyin gerçekten çalıştırıldığı. |
 | `RAPOR.md` | Ne çalıştı, ne çalışmadı, hangi araç yoktu; bulunan ve düzeltilen sekiz gerçek hata. |
 | `LEAN-DURUM.md` | Biçimsel katmanın durumu: 7 teorem, 0 `sorry`, kapsam dışı bırakılan 4 konu. |

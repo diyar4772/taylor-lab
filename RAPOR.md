@@ -17,7 +17,7 @@ ise neyin neden yapılamadığını söyler.
 |---|---|---|---|
 | `00-teori/` LaTeX | 1 `.tex` | ✅ | `pdflatex` ×3 → 8 sayfa, **0 hata, 0 uyarı, 0 taşma** |
 | `00-teori/obsidian/` | 4 not | ✅ | 19 wikilink tarandı, **0 kırık** |
-| `01-manim/` | 6 sahne | ⚠️ kısmi | 1. sahne Fedora'da yeniden render edildi; 2–6 Windows çıktıları |
+| `01-manim/` | 6 sahne | ✅ | **altısı da** Fedora'da `-qh` ile yeniden render edildi |
 | `02-python/` | 7 betik | ✅ | `taylor.py` ve `kalan_dogrulama.py` koşturuldu |
 | `03-matlab-octave/` | 5 `.m` | ⚠️ kısmi | Octave 10.3.0'da koştu; **MATLAB'da denenemedi** |
 | `04-lean/` | 4 `.lean` | ✅ | `lake build` 2777 iş, **0 `sorry`** |
@@ -77,12 +77,22 @@ denetlendi: yorumlar ve metin sabitleri ayıklandıktan sonra Octave'a özgü ya
 metin) bulunmadı ve her dosyada ana fonksiyon adı dosya adıyla aynı.
 **Bu bir söz değildir; MATLAB'da çalıştıkları gösterilemedi.**
 
-### 2.2 Manim: 6 sahnenin 5'i Fedora'da yeniden üretilmedi
+### 2.2 Manim — bu eksik kapandı
 
-1. sahne `-qh` ile yeniden render edildi ve Windows çıktısıyla **birebir aynı**
-   süreyi/çözünürlüğü/kare hızını verdi (25,25 sn · 1920×1080 · 60 fps). Bu,
-   zincirin çalıştığını gösterir. Kalan 5 video hâlâ Windows'ta üretilmiş
-   dosyalardır; tümünü yeniden üretmek ~8 dakika sürer:
+Bir ara yalnızca 1. sahne Fedora'da yeniden üretilmişti. Oturum sonunda
+**altı sahnenin tamamı** `-qh` ile yeniden render edildi:
+
+| Dosya | Çözünürlük | fps | Süre |
+|---|---|---|---|
+| `1-ArtanDereceSahnesi.mp4` | 1920×1080 | 60 | 25,25 sn |
+| `2-TuretmeSahnesi.mp4` | 1920×1080 | 60 | 40,30 sn |
+| `3-KalanTerimiSahnesi.mp4` | 1920×1080 | 60 | 33,70 sn |
+| `4-KompleksYaricapSahnesi.mp4` | 1920×1080 | 60 | 57,90 sn |
+| `5-AnalitikDegilSahnesi.mp4` | 1920×1080 | 60 | 47,10 sn |
+| `6-DengeSahnesi.mp4` | 1920×1080 | 60 | 54,90 sn |
+
+Süreler Windows'ta üretilen dosyalarla **birebir aynı**; yani sahneler
+platformdan bağımsız olarak aynı çıktıyı veriyor. Yeniden üretmek için:
 
 ```bash
 PATH="$PWD/.venv313/bin:$PATH" bash 01-manim/render.sh
