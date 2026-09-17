@@ -61,13 +61,13 @@ No files. On first launch Godot creates the `05-godot/.godot/` cache
 - The catalogue has no `cos` or `sqrt(1+x)` (the web and Octave layers do).
 - In the equilibrium game at 150°, the survival time is about **0.13 s**: the
   pendulums separate almost immediately.
-- The comment in `project.godot` refers to `testler/test_kendini.gd` and says
-  the constants are "identical" to `s06_denge.py`. The actual file is
-  `test_dogrulama.gd`, and the equilibrium game uses the pendulum, not the
-  polynomial potential of `s06_denge.py`. See [[12-gaps-and-next-steps]].
-- In `taylor_explorer.gd`, the first comment line of the `1/(1+x^2)` block
-  still quotes the old (wrong) `-Im(...)` formula; the code and the comment
-  below use the fixed version (`RAPOR.md` §3.5).
+- Comments that were fixed ([[12-gaps-and-next-steps]], B):
+  - The comment in `project.godot` pointed to a non-existent
+    `testler/test_kendini.gd` and called the constants "identical" to
+    `s06_denge.py`. It now names `test_dogrulama.gd` and `sarkac.py`.
+  - The old `-Im(...)` comment in `taylor_explorer.gd` now reads
+    `(-1)^n * Im(...)` (`RAPOR.md` §3.5).
+  - The "takes minutes at 5°" sentence in `denge_oyunu.gd` was corrected.
 
 ## Things to tinker with
 
@@ -77,8 +77,7 @@ No files. On first launch Godot creates the `05-godot/.godot/` cache
    with $\Delta\omega/\omega\approx\theta_0^2/16$, so time $\propto\theta_0^{-3}$
    (slope $\approx-3$). Does the measurement agree? Also try 5°: the two
    angles can differ by at most $2\theta_0=10°$, while the threshold is
-   "**greater** than 10°". Compare with the code comment claiming it "takes
-   minutes at 5°".
+   "**greater** than 10°". Does the survival-time label ever appear?
 2. **Change the threshold.** In `denge_oyunu.gd` set `const ESIK_DERECE := 10.0`
    to `1.0`. How much shorter does the survival time get at 5°?
 3. **Add a missing function.** Add `"cos"` to `KATALOG` in

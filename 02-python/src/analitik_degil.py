@@ -190,7 +190,7 @@ def main() -> int:
         "Aynı `z=0` noktasına iki yönden yaklaşıp biri 0, diğeri sonsuz "
         "veriyorsa orada limit yoktur — `z=0` bir **esas tekilliktir**.\n\n"
         + ortam.markdown_tablo(
-            ["|z|", "reel eksen boyunca: e^(−1/x²)", "hayali eksen boyunca: e^(+1/y²)"],
+            ["mutlak z", "reel eksen boyunca: e^(−1/x²)", "hayali eksen boyunca: e^(+1/y²)"],
             kompleks_satirlari)
         + "\n\nBu, `kompleks_yaricap.md` dosyasındaki dersin en uç hâlidir: "
           "reel eksende hiçbir kusuru olmayan bir fonksiyonun Taylor "

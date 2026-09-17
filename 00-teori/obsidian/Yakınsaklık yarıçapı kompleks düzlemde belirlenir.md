@@ -53,8 +53,15 @@ Cauchy–Hadamard teoremi $1/R = \limsup |a_n|^{1/n}$ der. Oradaki $\limsup$
 titizlik gösterisi değil, zorunluluk. Somut tanığı şu: $f = 1/(1+x^2)$ ve
 $a = 1$ alındığında $i$ ile $-i$ merkeze **eşit uzaklıkta ama farklı
 yönlerdedir**. Katsayılar bu yüzden salınır ve $|a_n / a_{n+1}|$ oranının
-limiti **yoktur**. Oran testi burada %22,66 sapar; $\limsup$ ile kurulan
-Cauchy–Hadamard ise %1,66 hatayla doğru cevabı verir.
+limiti **yoktur**: $N = 52, \dots, 60$ için oran testi sırasıyla
+$\sqrt2, 1, 2, 2, \sqrt2, 1, 2, 2, \sqrt2$ verir, yani cevabı nerede
+durduğuna bağlıdır. $\limsup$ ile kurulan Cauchy–Hadamard ise aynı aralıkta
+yaklaşık %0,6 sapmayla yerinde durur.
+
+> Düzeltme: bu not önceden "oran testi %22,66 sapar, C–H %1,66" diyordu. O
+> sayılar katsayıların kayan noktalı merkezle üretilmesinden doğan
+> hassasiyet kaybıyla bozulmuştu; `katsayi_dizisi` artık tam aritmetik
+> kullanıyor.
 
 İki tekillik merkeze eşit uzaklıkta olur olmaz oran testi çöker; $\limsup$
 çökmemek için oradadır.

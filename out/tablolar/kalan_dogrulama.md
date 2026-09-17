@@ -1,7 +1,7 @@
 # Lagrange kalan sınırı doğrulaması
 
 Her satır, o fonksiyon için N=1..12 ve 1501 nokta üzerinde yapılan tüm testlerin özetidir.
-`en kötü oran` = max(gerçek hata / Lagrange sınırı); teoremin doğru olması için **1'i asla geçmemeli**.
+`en kötü oran` = max(gerçek hata / Lagrange sınırı), **float64 ile** ölçülmüş ve yalnızca "anlamlı rejim"de (sınır > yuvarlama tabanı) alınmıştır. Teorem gerçek oranın 1'i asla geçmemesini söyler; bu sütunda 1'in üstünde görünen değerler ise float64 artığıdır: yuvarlama tabanı `(N+2)·eps` ile kestirilen yaklaşık bir eşiktir ve sınırın tabanın hemen üstünde kaldığı noktalar "anlamlı" sayılır. Örneğin `ln(1+x)`, `N=7`, `x≈0.0126`: sınır 7.9e-17, float64 oranı 2.36, mpmath oranı 0.989. Bu yüzden hüküm bu sütuna değil, aşağıdaki mpmath teyidine bırakılır.
 
 `yuvarlama rejimi` sütunu, Lagrange sınırının float64'ün ölçebileceğinin altına düştüğü nokta sayısıdır. Oralarda ölçüm anlamsızdır ve ayrıca mpmath ile test edilirler (aşağıdaki ikinci tablo).
 

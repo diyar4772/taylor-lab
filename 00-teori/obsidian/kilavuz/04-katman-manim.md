@@ -30,7 +30,7 @@ GitHub'da küçük resme tıklayınca video açılır.
 | `scenes/s03_kalan_terimi.py` | `KalanTerimiSahnesi` | 33,7 sn | log eksende gerçek hata ve sınır, $N=1..10$ | $\sin$ için $\sup\lvert f^{(N+1)}\rvert=1$; test noktası $x=2$, $N=10$ |
 | `scenes/s04_kompleks_yaricap.py` | `KompleksYaricapSahnesi` | 57,9 sn | reel eksen → $\pm i$ kutupları → ısı haritası ($N=2,4,8,16,30$) → merkez $a=0{,}7;\,1{,}4;\,2{,}0$ | `PENCERE = 2.6`, `IZGARA = 420` |
 | `scenes/s05_analitik_degil.py` | `AnalitikDegilSahnesi` | 47,1 sn | $f^{(n)}(0)=0$, seri $\equiv0$, $f(1)=0{,}3679$, iki yönden $z\to0$ | `f_guvenli()` |
-| `scenes/s06_denge.py` | `DengeSahnesi` | 54,9 sn | keyfi $V(x)$, $x_0\approx2{,}1918$, $k=V''(x_0)\approx5{,}880$; genlik 0,25 / 0,7 / 1,3 | `V()`, `genlikler` |
+| `scenes/s06_denge.py` | `DengeSahnesi` | 54,9 sn | keyfi $V(x)$, $x_0\approx2{,}1918$, $k=V''(x_0)\approx5{,}880$; genlik 0,25 / 0,5 / 0,7 | `V()`, `genlikler` |
 | `scenes/tema.py` | — | — | renkler, yazı boyutları, `baslik()`, `eksen()`, `etiket_kutusu()` | — |
 | `render.sh` | — | — | sahneleri render edip `out/videolar/<sıra>-<Sınıf>.mp4`'ye kopyalar | `KALITE` (varsayılan `-qh`) |
 
@@ -78,34 +78,34 @@ PATH="$PWD/.venv313/bin:$PATH" bash 01-manim/render.sh 4     # 1080p60, out/vide
 - LaTeX kurulu olmalı (`MathTex` → dvisvgm).
 - Sahne 4 için: numpy ile ızgarada hesap, `ImageMobject`.
 
-## Eleştirel not: video 6'nın son bölümü
+## Düzeltme notu: video 6'nın son bölümü
 
-![Genlik 1.3](ekler/video6-bariyer.png)
+![Genlik 0.7](ekler/video6-anharmonik.png)
 
-Kapanış metni "genlik büyüdükçe atılan $\tfrac16V'''(x_0)u^3$ terimi geri
-dönüyor … anharmonisite budur" der. Genlik 0,7 için bu doğru; genlik 1,3 için
-**değil**:
+Sahnenin ilk sürümü genlikleri 0,25 / 0,7 / **1,3** olarak seçiyordu. Kapanış
+metni ise "genlik büyüdükçe atılan $\tfrac16V'''(x_0)u^3$ terimi geri
+dönüyor … anharmonisite budur" diyordu. 1,3 için bu doğru değildi:
 
 - Potansiyelin kritik noktaları $-1{,}248$ (sol minimum), $0{,}249$ (tepe,
-  $V\approx3{,}077$), $2{,}192$ (sağ minimum).
+  $V\approx3{,}077$) ve $2{,}192$ (sağ minimum).
 - Genlik 1,3'te enerji $V(x_0+1{,}3)\approx9{,}49 > 3{,}077$. Parçacık tepeyi
-  aşar, $u$ yaklaşık $-4{,}75$'e kadar iner.
-- Grafik `np.clip(u, -1.6, 1.6)` ile kırpıldığı için bu kaçış **düz platolar**
-  olarak görünür. Ekrandaki "ayrışma: 3.544" bir faz kaymasını değil, kuyudan
-  çıkışı ölçer.
-- Ayrıca kutudaki yazı `genlik = (1.3)` biçiminde parantezli çıkıyor
-  (`formul(rf"\text{{genlik}}=({A})")`).
+  aşıyor ve $u$ yaklaşık $-4{,}75$'e kadar iniyordu. Grafik `np.clip(u, -1.6, 1.6)`
+  ile kırpıldığı için bu kaçış **düz platolar** olarak görünüyordu.
+- Eşik genlik $V(x_0+A)=V_{\text{tepe}}$'den $A\approx0{,}784$.
 
-Hesap: `V`, `dV`, `ddV` ve `denge_bul` fonksiyonlarını `solve_ivp` ile
-çalıştırarak yapıldı (bkz. [[02-calisma-plani#Oturum 8 — Atılan terim periyotta geri döner]]).
+Düzeltme: `genlikler = [0.25, 0.5, 0.7]`. Video 1080p60 olarak yeniden
+üretildi (süre değişmedi: 54,9 sn). Son genlikte ekranda
+"genlik = 0.7, ayrışma: 1.685" görünür. Gerçek eğri kuyuda kalır ama
+belirgin biçimde asimetriktir ve periyodu uzundur; kapanış metni artık
+doğru şeyi anlatıyor. Ayrıca kutudaki `genlik = (1.3)` parantezleri
+kaldırıldı.
 
 ## Kurcalama önerileri
 
-1. **Bariyer eşiğini bul.** Önce Python'da $V(x_0+A)=V_{\text{tepe}}$
-   denklemini `brentq` ile çöz. Eşik $A\approx0{,}784$ çıkmalı; $A=1{,}0$ bile
-   bariyeri aşar ($E\approx5{,}16$). Sonra `s06_denge.py` →
-   `genlikler = [0.25, 0.7, 1.3]`'ü `[0.25, 0.5, 0.75]` yap ve `-ql` ile render
-   et. Platolar kayboluyor mu? Ayrışma artık gerçekten bir faz kayması mı?
+1. **Hatayı yeniden üret.** `s06_denge.py` → `genlikler`'i
+   `[0.25, 0.7, 1.3]` yap ve `-ql` ile render et. Düz platoları gör. Sonra
+   `[0.25, 0.7, 0.78]` ile eşiğin hemen altını dene: periyot ne kadar uzuyor?
+   İşin bitince `git restore 01-manim/`.
 2. **Toleransla oyna.** `s01_artan_derece.py` → `iyi_bolge(N, tolerans=0.05)`
    yerine `tolerans=0.005` kullan. $N=15$'te bölge $6{,}1$'den kaça iner?
 3. **Başka merkez.** `s04_kompleks_yaricap.py` → `for a_yeni in (0.7, 1.4, 2.0)`

@@ -68,6 +68,12 @@ tamamı mpmath ile 60 basamakta yeniden ölçüldü; hepsinde oran 1'in altına
 döndü. Aşılan şey teorem değil, **ölçüm aletiydi** — ve hüküm float64'e
 bırakılmadı.
 
+`en kötü oran` sütunundaki 1'den büyük değerler de aynı türden bir artıktır:
+sütun float64 ile ölçülür ve "anlamlı rejim" filtresi (`(N+2)·eps` ile
+kestirilen bir taban) yaklaşıktır. En büyüğü olan `ln(1+x)` satırındaki 2.3593
+`x≈0.0126` noktasından gelir; orada sınır 7.9e-17'dir ve aynı noktanın mpmath
+oranı **0.989**'dur.
+
 ![Lagrange sınırı ve gerçek hata](out/gorseller/kalan_dogrulama.png)
 
 ### 2. Lagrange kalanındaki ξ arandı ve bulundu — yarıçapın dışında bile
@@ -131,17 +137,28 @@ Aynı fonksiyonun reel eksendeki görüntüsü hiçbir şey ele vermez:
 | 1/(1+x^2)      | 0  | 1.0000   | 1.0000        | 0.00%      | 1.0000     | 0.00%       |
 | arctan(x)      | 0  | 1.0000   | 1.0716        | 7.16%      | 1.0174     | 1.74%       |
 | sqrt(1+x)      | 0  | 1.0000   | 1.1313        | 13.13%     | 1.0256     | 2.56%       |
-| 1/(1+x^2), a=1 | 1  | 1.4142   | 1.3907        | 1.66%      | 1.0938     | 22.66%      |
+| 1/(1+x^2), a=1 | 1  | 1.4142   | 1.4228        | 0.61%      | 1.4142     | 0.00%       |
 | 1/(1-x), a=-1  | -1 | 2.0000   | 2.0232        | 1.16%      | 2.0000     | 0.00%       |
 
 Bu tablodaki R değerleri fonksiyonun kompleks düzlemdeki tekilliklerine
 **hiç bakılmadan**, yalnızca katsayı dizisinden `1/R = limsup |a_n|^(1/n)`
 ile kestirildi. Bir önceki tablo aynı sayılara tekilliklerin
 geometrisinden ulaşıyordu; Cauchy-Hadamard teoremi tam olarak bu iki
-bağımsız yolun her zaman buluştuğunu söyler. Son satırlardan biri
-teoremin neden `limit` değil `limsup` ile kurulduğunu gösterir: `a=1` için
-en yakın iki tekillik eşit uzaklıkta ama farklı yöndedir, katsayılar
-salınır ve oran testi %22,66 sapar — limsup ise yine doğru cevabı verir.
+bağımsız yolun her zaman buluştuğunu söyler.
+
+`a=1` satırı teoremin neden `limit` değil `limsup` ile kurulduğunu gösterir.
+Bu merkezden en yakın iki tekillik (`i`, `−i`) eşit uzaklıkta ama farklı
+yöndedir; katsayılar `c_n = (−1)^n 2^(−(n+1)/2) sin((n+1)π/4)` biçiminde
+salınır ve `n ≡ 3 (mod 4)` için tam sıfırdır. Oran testinin **limiti yoktur**:
+N=52…60 için sırasıyla `1.4142, 1, 2, 2, 1.4142, 1, 2, 2, 1.4142` verir
+(tablodaki N=60 değerinin tam √2 çıkması tesadüftür). Cauchy-Hadamard ise
+aynı aralıkta 1.423–1.424'te sabit kalır.
+
+> Düzeltme notu: bu satır önceden C-H %1,66, oran testi %22,66 gösteriyordu.
+> O sayılar katsayıların merkez **float** (`a=1.0`) verilerek üretilmesinden
+> kaynaklanan hassasiyet kaybıyla bozulmuştu (n=60'ta katsayının işareti bile
+> yanlıştı). `taylor.py` → `katsayi_dizisi` artık merkezi `sp.Rational(a)`
+> olarak kullanıyor.
 
 ![Yarıçap geçişi](out/gorseller/yaricap_gecisi.png)
 
@@ -175,14 +192,16 @@ hatadan değil.
 
 `out/tablolar/frobenius.md` — Hermite denklemi, `ψ = H(x)·e^(−x²/2)`
 
-| λ   | seri kesiliyor mu? | H(4)        | ψ(4) = H(4)·e⁻⁸ | durum                |
-|-----|--------------------|-------------|-----------------|----------------------|
-| 0   | evet, derece 0     | 1.0000e+00  | 3.3546e-04      | normalize edilebilir |
-| 1   | evet, derece 1     | 4.0000e+00  | 1.3419e-03      | normalize edilebilir |
-| 2   | evet, derece 2     | -3.1000e+01 | -1.0399e-02     | normalize edilebilir |
-| 3   | evet, derece 3     | -3.8667e+01 | -1.2971e-02     | normalize edilebilir |
-| 2.5 | HAYIR              | 4.2513e+04  | 1.4261e+01      | PATLIYOR             |
-| 3.7 | HAYIR              | 1.0531e+04  | 3.5328e+00      | PATLIYOR             |
+| λ   | seri kesiliyor mu? | H(4)        | ψ(4) = H(4)·e⁻⁸ | ∫ψ² oranı (L=6 / L=4) | durum                |
+|-----|--------------------|-------------|-----------------|-----------------------|----------------------|
+| 0   | evet, derece 0     | 1.0000e+00  | 3.3546e-04      | 1.000000              | normalize edilebilir |
+| 1   | evet, derece 1     | 4.0000e+00  | 1.3419e-03      | 1.000001              | normalize edilebilir |
+| 2   | evet, derece 2     | -3.1000e+01 | -1.0399e-02     | 1.000008              | normalize edilebilir |
+| 3   | evet, derece 3     | -3.8667e+01 | -1.2971e-02     | 1.000085              | normalize edilebilir |
+| 2.5 | HAYIR              | 4.2513e+04  | 1.4261e+01      | 9.522e+06             | PATLIYOR             |
+| 3.7 | HAYIR              | 1.0531e+04  | 3.5328e+00      | 1.025e+06             | PATLIYOR             |
+
+`durum` sütunu tek noktaya değil normalizasyon integraline dayanır: `∫ψ²` önce `[−4, 4]`, sonra `[−6, 6]` üzerinde hesaplanır; ψ sönüyorsa oran ≈ 1 kalır, `e^(+x²/2)` gibi büyüyorsa milyonlarca kat artar.
 
 Bu bölüm laboratuvarın geri kalanının tersini yapar: diğer betiklerde
 bilinen bir fonksiyonun serisi çıkarılıyordu, burada **seri önce gelir**,
@@ -243,8 +262,14 @@ bağlantılar dosyayı indirir veya tarayıcıda açar.
 
 ```bash
 cd taylor-lab                        # deponun klonlandığı dizin
-python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+# requirements.txt manim içerir; manim Python 3.14'e kurulamaz (av<14),
+# bu yüzden 3.14 ortamına manim'siz kurulur:
+python3 -m venv .venv && grep -v '^manim' requirements.txt > /tmp/req-sayisal.txt \
+  && .venv/bin/pip install -r /tmp/req-sayisal.txt
+python3.13 -m venv .venv313 && .venv313/bin/pip install -r requirements.txt   # yalnızca manim
 source .venv/bin/activate            # sayısal betikler
+# Windows / Python 3.13: tek ortam yeter →  py -3.13 -m venv .venv
+#                        .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 export PATH="$HOME/.elan/bin:$PATH"  # lean / lake
 ```
 

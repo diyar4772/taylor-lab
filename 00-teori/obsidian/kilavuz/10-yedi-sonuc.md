@@ -178,15 +178,15 @@ değerlerini alır ($n\equiv3 \pmod 4$ için katsayı tam **sıfır**). Sonuçta
   oran testi: `1.4142, 1.0, 2.0, 2.0, 1.4142, 1.0, 2.0, 2.0, 1.4142`.
   **Limit yoktur**; oran testinin sonucu hangi $N$'de durduğuna bağlıdır.
 
-> [!warning] Tablodaki %22,66 hakkında
-> Depo bu satırda oran testinin %22,66 saptığını yazar. Bu kılavuz
-> yazılırken yapılan kontrol, sayının **kayan nokta hassasiyet kaybıyla
-> kirlendiğini** gösterdi. `katsayi_dizisi(expr, 1.0, 60)` merkezi float
-> olarak verir; $n=40$'ta bağıl hata ~$10^{-5}$, $c_{60}$'ın ise işareti
-> yanlış ($+2{,}55\times10^{-9}$, doğrusu $-4{,}66\times10^{-10}$). Tam
-> katsayılarla $N=60$'ta oran testi tam $\sqrt2$ (%0,00), C-H 1,4228 (%0,61)
-> çıkar. **Ders doğrudur** (limit yok), ama doğru kanıtı yukarıdaki salınımdır,
-> tablodaki tek sayı değil. Ayrıntı: [[12-eksikler-ve-devam]].
+> [!note] Düzeltme: eski %22,66
+> Deponun ilk sürümü bu satırda oran testinin %22,66, C-H'nin %1,66 saptığını
+> yazıyordu. Bu kılavuz yazılırken yapılan kontrol, sayıların **kayan nokta
+> hassasiyet kaybıyla kirlendiğini** gösterdi: `katsayi_dizisi` merkezi float
+> olarak veriyordu; $n=40$'ta bağıl hata ~$10^{-5}$, $c_{60}$'ın ise işareti
+> yanlıştı ($+2{,}55\times10^{-9}$, doğrusu $-4{,}66\times10^{-10}$).
+> Düzeltmeden sonra (`sp.Rational(a)`) tablo $N=60$'ta oran testi için tam
+> $\sqrt2$ (%0,00), C-H için 1,4228 (%0,61) veriyor ve yukarıdaki salınım
+> tablosunu da içeriyor. Ayrıntı: [[12-eksikler-ve-devam]].
 
 **Diğer satırlar.**
 
@@ -254,7 +254,7 @@ hatadır". Bedel **niteliksel**: izokronizm kaybolur.
 `kesilme_dogrula()`, `sembolik_dogrulama()`.
 
 **Kritik sütunlar** (`frobenius.md`): **seri kesiliyor mu?**, **H(4)**,
-**ψ(4)**; Legendre için **kısmi toplam büyümesi**; doğrulamada
+**ψ(4)**, **∫ψ² oranı (L=6 / L=4)**; Legendre için **kısmi toplam büyümesi**; doğrulamada
 **denklemdeki kalıntı** (hepsi `0 ✓`).
 
 ### Kuantizasyon rekürans kesilmesinden nasıl doğar?
@@ -277,8 +277,10 @@ Kanıt **kısmi toplam büyümesi** sütunudur (kesilenlerde tam 0).
 
 - Kesilme **eşikle** belirlenemez: $\lambda=2{,}5$ için katsayılar
   $n\approx28$'den sonra $10^{-14}$'ün altına iner ama sıfır değildir.
-- "normalize edilebilir / PATLIYOR" kararı tek noktalı bir göstergedir
-  ($\lvert\psi(4)\rvert<1$), integral değildir.
+- "normalize edilebilir / PATLIYOR" kararı normalizasyon integraline
+  dayanır: $\int\psi^2$'nin $[-6,6]$ ile $[-4,4]$ üzerindeki oranı. Tam sayı
+  $\lambda$'da oran en fazla $1{,}000085$, $\lambda=2{,}5$'te
+  $9{,}5\times10^6$. (İlk sürüm yalnızca $\lvert\psi(4)\rvert<1$'e bakıyordu.)
 
 ![Hermite](../../../out/gorseller/frobenius_hermite.png)
 

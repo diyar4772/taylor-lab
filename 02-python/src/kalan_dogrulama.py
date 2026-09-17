@@ -348,8 +348,15 @@ def main() -> int:
     icerik = (
         "Her satır, o fonksiyon için N=1..12 ve " + str(NOKTA_SAYISI) +
         " nokta üzerinde yapılan tüm testlerin özetidir.\n"
-        "`en kötü oran` = max(gerçek hata / Lagrange sınırı); teoremin "
-        "doğru olması için **1'i asla geçmemeli**.\n\n"
+        "`en kötü oran` = max(gerçek hata / Lagrange sınırı), **float64 ile** "
+        "ölçülmüş ve yalnızca \"anlamlı rejim\"de (sınır > yuvarlama tabanı) "
+        "alınmıştır. Teorem gerçek oranın 1'i asla geçmemesini söyler; bu "
+        "sütunda 1'in üstünde görünen değerler ise float64 artığıdır: "
+        "yuvarlama tabanı `(N+2)·eps` ile kestirilen yaklaşık bir eşiktir ve "
+        "sınırın tabanın hemen üstünde kaldığı noktalar \"anlamlı\" sayılır. "
+        "Örneğin `ln(1+x)`, `N=7`, `x≈0.0126`: sınır 7.9e-17, float64 oranı "
+        "2.36, mpmath oranı 0.989. Bu yüzden hüküm bu sütuna değil, aşağıdaki "
+        "mpmath teyidine bırakılır.\n\n"
         "`yuvarlama rejimi` sütunu, Lagrange sınırının float64'ün ölçebileceğinin "
         "altına düştüğü nokta sayısıdır. Oralarda ölçüm anlamsızdır ve ayrıca "
         "mpmath ile test edilirler (aşağıdaki ikinci tablo).\n\n"

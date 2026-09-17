@@ -11,7 +11,7 @@ Buradaki n! bir süsleme değildir. (x-a)^n terimini n kez türevlediğinde
 önüne n! çarpanı düşer; katsayıyı n!'e bölmek tam olarak bu çarpanı
 sıfırlar. Yani a_n = f^(n)(a)/n! seçimi, "P_N'in a noktasındaki n. türevi
 f'in a noktasındaki n. türevine eşit olsun" koşulunun ZORUNLU sonucudur,
-bir tercih değil.  (Bkz. 00-teori/obsidian/01-taylor-kavramsal-temel.md)
+bir tercih değil.  (Bkz. "00-teori/obsidian/Taylor açılımı bir tanım değil zorunluluktur.md")
 """
 
 from __future__ import annotations
@@ -112,8 +112,17 @@ def sayisal_fonksiyon(expr: sp.Expr) -> Callable[[np.ndarray], np.ndarray]:
 
 
 def katsayi_dizisi(expr: sp.Expr, a: float, N: int) -> np.ndarray:
-    """a_0..a_N katsayılarını float dizisi olarak verir (Cauchy-Hadamard için)."""
-    return np.array([float(c) for c in taylor_katsayilari(expr, a, N)])
+    """a_0..a_N katsayılarını float dizisi olarak verir (Cauchy-Hadamard için).
+
+    Merkez, float64'ün TAM ikili değerine karşılık gelen rasyonele
+    (``sp.Rational(a)``) çevrilir; türevler sembolik tutulur ve yalnızca en
+    sonda float'a indirgenir. Float bir ``a`` ile sympy yüksek mertebeli
+    türevleri 15 basamakta değerlendirir ve yıkıcı sadeleşme katsayıları
+    bozar: 1/(1+x^2), a=1.0 için n=40'ta bağıl hata ~1e-5, n=60'ta
+    katsayının işareti bile yanlış çıkıyordu (kapalı biçim:
+    c_n = (-1)^n 2^(-(n+1)/2) sin((n+1)π/4)).
+    """
+    return np.array([float(c) for c in taylor_katsayilari(expr, sp.Rational(a), N)])
 
 
 # --------------------------------------------------------------------------

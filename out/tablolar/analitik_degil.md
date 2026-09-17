@@ -36,12 +36,12 @@ Bu, `C^ω ⊊ C^∞` içermesinin somut tanığıdır: f sonsuz kez türevlenebi
 
 Reel eksende f uslu uslu sıfıra gider; hiçbir şey olmuyor gibidir. Ama `z = iy` alırsak `-1/z² = +1/y²` olur ve `e^(1/y²) → ∞`. Aynı `z=0` noktasına iki yönden yaklaşıp biri 0, diğeri sonsuz veriyorsa orada limit yoktur — `z=0` bir **esas tekilliktir**.
 
-| |z|  | reel eksen boyunca: e^(−1/x²) | hayali eksen boyunca: e^(+1/y²) |
-|------|-------------------------------|---------------------------------|
-| 0.5  | 1.832e-02                     | 5.460e+01                       |
-| 0.3  | 1.495e-05                     | 6.691e+04                       |
-| 0.2  | 1.389e-11                     | 7.200e+10                       |
-| 0.1  | 3.720e-44                     | 2.688e+43                       |
-| 0.05 | 1.915e-174                    | 5.221e+173                      |
+| mutlak z | reel eksen boyunca: e^(−1/x²) | hayali eksen boyunca: e^(+1/y²) |
+|----------|-------------------------------|---------------------------------|
+| 0.5      | 1.832e-02                     | 5.460e+01                       |
+| 0.3      | 1.495e-05                     | 6.691e+04                       |
+| 0.2      | 1.389e-11                     | 7.200e+10                       |
+| 0.1      | 3.720e-44                     | 2.688e+43                       |
+| 0.05     | 1.915e-174                    | 5.221e+173                      |
 
 Bu, `kompleks_yaricap.md` dosyasındaki dersin en uç hâlidir: reel eksende hiçbir kusuru olmayan bir fonksiyonun Taylor davranışını belirleyen şey, kompleks düzlemde olup bitenlerdir. `1/(1+x²)`'de bu bir kutuptu ve yarıçapı 1'e düşürüyordu; burada esas tekilliktir ve seriyi tamamen işe yaramaz kılar.

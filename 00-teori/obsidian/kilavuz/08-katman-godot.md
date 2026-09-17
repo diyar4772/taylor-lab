@@ -61,14 +61,13 @@ Dosya üretmez. Godot ilk açılışta `05-godot/.godot/` önbelleğini oluştur
 - Katalogda `cos` ve `sqrt(1+x)` yoktur (web ve Octave'da vardır).
 - Denge oyununda 150°'de dayanma süresi yaklaşık **0,13 s**: sarkaçlar neredeyse
   hemen ayrışır.
-- `project.godot`'taki yorum `testler/test_kendini.gd`'ye atıf yapar ve
-  sabitlerin `s06_denge.py` ile "birebir aynı" olduğunu söyler. Dosyanın
-  gerçek adı `test_dogrulama.gd`'dir; denge oyunu da `s06_denge.py`'deki
-  polinom potansiyeli değil, sarkacı kullanır.
-  Bkz. [[12-eksikler-ve-devam]].
-- `taylor_explorer.gd`'de `1/(1+x^2)` bloğunun ilk yorum satırı hâlâ eski
-  (hatalı) `-Im(...)` biçimini anar; kod ve alttaki yorum düzeltilmiş hâli
-  kullanır (`RAPOR.md` §3.5).
+- Düzeltilen yorumlar ([[12-eksikler-ve-devam]], B):
+  - `project.godot`'taki yorum var olmayan `testler/test_kendini.gd`'ye atıf
+    yapıyor ve sabitleri `s06_denge.py` ile "birebir aynı" sayıyordu. Artık
+    `test_dogrulama.gd`'yi ve `sarkac.py`'ı anıyor.
+  - `taylor_explorer.gd`'deki eski `-Im(...)` yorumu `(-1)^n * Im(...)` oldu
+    (`RAPOR.md` §3.5).
+  - `denge_oyunu.gd`'deki "5°'de dakikalar sürer" cümlesi düzeltildi.
 
 ## Kurcalama önerileri
 
@@ -78,7 +77,7 @@ Dosya üretmez. Godot ilk açılışta `05-godot/.godot/` önbelleğini oluştur
    $\Delta\omega/\omega\approx\theta_0^2/16$, yani süre $\propto\theta_0^{-3}$
    (eğim $\approx-3$). Ölçüm bunu tutuyor mu? Bir de 5°'yi dene: iki açının
    farkı en fazla $2\theta_0=10°$ olabilir, eşik ise "10°'den **büyük**".
-   Kod yorumundaki "5°'de dakikalar sürer" cümlesiyle karşılaştır.
+   Dayanma süresi yazısı çıkıyor mu?
 2. **Eşiği değiştir.** `denge_oyunu.gd` → `const ESIK_DERECE := 10.0`'ı `1.0`
    yap. 5°'de süre ne kadar kısalıyor?
 3. **Eksik fonksiyonu ekle.** `taylor_explorer.gd` → `KATALOG`'a `"cos"` ekle;

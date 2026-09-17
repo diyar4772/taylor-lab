@@ -5,7 +5,8 @@
 #        `python`, `manim`, `octave`, `lean`, `all` hedefleri make üzerinden
 #        tek tek çalıştırılmadı — altlarındaki komutlar `dogrula.sh` içinde
 #        doğrudan koşturuluyor.
-#        Windows tarafındaki PowerShell muadili: ./yap.ps1 <hedef>
+#        Windows'ta make yoktur; katmanlar komutlarıyla tek tek çalıştırılır
+#        (00-teori/obsidian/kilavuz/01-ortam-kurulumu.md).
 #
 # Hedefler:  make dogrula | make dogrula-hizli
 #            make python | make manim | make teori | make octave | make lean

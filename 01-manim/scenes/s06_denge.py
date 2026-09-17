@@ -201,7 +201,12 @@ class DengeSahnesi(Scene):
             return ts, coz.y[0]
 
         sure = 4 * 2 * np.pi / omega
-        genlikler = [0.25, 0.7, 1.3]
+        # Genlikler bariyerin ALTINDA seçilir. Sol taraftaki tepe x≈0.249'da,
+        # V≈3.077; x0'dan bırakılan parçacık için eşik genlik A≈0.784
+        # (V(x0+A) = V_tepe). Daha büyük genlikte parçacık kuyudan çıkar ve
+        # görülen şey anharmonisite değil bariyer aşımı olur (önceki sürümde
+        # 1.3 kullanılıyordu: E≈9.49, u -4.75'e kadar iniyordu).
+        genlikler = [0.25, 0.5, 0.7]
 
         alt_ax = Axes(x_range=[0, sure, sure / 4], y_range=[-1.6, 1.6, 0.5],
                       x_length=9.0, y_length=2.8,
@@ -243,7 +248,7 @@ class DengeSahnesi(Scene):
             ayrisma = float(np.max(np.abs(us[-len(us)//4:] -
                                           A * np.cos(omega * ts[-len(ts)//4:]))))
             yeni_bilgi = VGroup(
-                formul(rf"\text{{genlik}}=({A})", boyut=26, renk=VURGU),
+                formul(rf"\text{{genlik}}={A}", boyut=26, renk=VURGU),
                 Text(f"ayrışma: {ayrisma:.3f}", font_size=20,
                      color=HATA if ayrisma > 0.05 else VURGU),
             ).arrange(DOWN, buff=0.15)

@@ -5,8 +5,8 @@
 ;   taylor_explorer.tscn — Taylor polinomu bir eğriyi nerede bırakır?
 ;   denge_oyunu.tscn     — kararlı denge neden HER ZAMAN harmonik osilatördür?
 ;
-; Sayısal sabitler 02-python/src/ ve 01-manim/scenes/s06_denge.py ile
-; bilerek birebir aynıdır; testler/test_kendini.gd bunu doğrular.
+; Sarkaç sabitleri (g, L) 02-python/src/sarkac.py ile bilerek birebir aynıdır;
+; katsayılar ve periyotlar test_dogrulama.gd ile Python çıktısına karşı denetlenir.
 
 config_version=5
 

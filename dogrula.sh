@@ -160,6 +160,16 @@ echo "  Makine : $(uname -sr)"
 [ "$HIZLI" -eq 1 ] && echo "  Kip    : --hizli (Lean atlanacak)"
 
 PY="$BURASI/.venv/bin/python"
+# Windows (Git Bash): sanal ortamın yorumlayıcısı Scripts/ altındadır.
+[ -x "$PY" ] || [ ! -x "$BURASI/.venv/Scripts/python.exe" ] || PY="$BURASI/.venv/Scripts/python.exe"
+
+# Octave: Linux'ta PATH'te; Windows'ta winget onu PATH'e eklemez.
+OCTAVE="$(command -v octave-cli 2>/dev/null || true)"
+if [ -z "$OCTAVE" ] && [ -n "${LOCALAPPDATA:-}" ]; then
+  for aday in "$LOCALAPPDATA"/Programs/"GNU Octave"/*/mingw64/bin/octave-cli.exe; do
+    [ -x "$aday" ] && OCTAVE="$aday" && break
+  done
+fi
 
 # --------------------------------------------------------------------
 baslik "1. Sayısal katman (02-python)"
@@ -167,8 +177,8 @@ if [ -x "$PY" ]; then
   kosu "Taylor çekirdeği (taylor.py)"        "$PY" 02-python/src/taylor.py
   kosu "Lagrange kalan taraması"             "$PY" 02-python/src/kalan_dogrulama.py
 else
-  atla "Taylor çekirdeği (taylor.py)"        ".venv/bin/python yok"
-  atla "Lagrange kalan taraması"             ".venv/bin/python yok"
+  atla "Taylor çekirdeği (taylor.py)"        "sanal ortam (.venv) yok"
+  atla "Lagrange kalan taraması"             "sanal ortam (.venv) yok"
 fi
 
 # --------------------------------------------------------------------
@@ -184,9 +194,9 @@ kosu "Obsidian wikilink bütünlüğü"           wikilink_dogrula
 
 # --------------------------------------------------------------------
 baslik "3. MATLAB uyumlu katman (03-matlab-octave)"
-if command -v octave-cli >/dev/null 2>&1; then
+if [ -n "$OCTAVE" ]; then
   kosu "Octave demosu (demo_calistir.m)"     bash -c \
-    'cd 03-matlab-octave && octave-cli --no-gui --quiet demo_calistir.m'
+    'cd 03-matlab-octave && "$1" --no-gui --quiet demo_calistir.m' _ "$OCTAVE"
 else
   atla "Octave demosu (demo_calistir.m)"     "octave-cli kurulu değil"
 fi

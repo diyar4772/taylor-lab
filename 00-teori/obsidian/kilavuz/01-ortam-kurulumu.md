@@ -77,10 +77,9 @@ python 02-python/src/taylor.py
 ```
 
 > [!warning] `grep -v` satırı hakkında
-> README `.venv/bin/pip install -r requirements.txt` der. `requirements.txt`
-> içinde `manim==0.19.0` olduğu için bu komut 3.14'te büyük olasılıkla
-> `av` derlemesinde düşer (`ENVANTER.md`'deki hata). Manim'i ayıklayan
-> satır bu kılavuzun önerisidir; Fedora'da **(denenmedi)**.
+> `requirements.txt` içinde `manim==0.19.0` var; olduğu gibi 3.14'e kurmaya
+> çalışmak `av` derlemesinde düşer (`ENVANTER.md`'deki hata). README ve RAPOR
+> bu yüzden manim'i ayıklayan satırı kullanır. Satır Fedora'da **(denenmedi)**.
 
 Defteri açmak için (`jupyterlab` requirements'ta var):
 
@@ -273,11 +272,13 @@ make dogrula          # hepsi
 make dogrula-hizli    # Lean hariç
 ```
 
-**Windows:** `make` yok. `bash dogrula.sh` Git Bash'te çalışır, ama
-Python'u `.venv/bin/python` yolunda aradığı için (Windows'ta
-`.venv\Scripts\python.exe`) Python katmanlarını **ATLANDI** sayar; Octave PATH'te
-olmadığı için onu da atlar. Denendiğinde sonuç `GEÇTİ 3 · KALDI 0 · ATLANDI 5`
-oldu. Windows'ta katmanları yukarıdaki komutlarla tek tek doğrula:
+**Windows:** `make` yok, ama `bash dogrula.sh --hizli` Git Bash'te çalışır.
+Python'u `.venv/bin/python` ya da `.venv/Scripts/python.exe` yolunda,
+Octave'ı PATH'te ya da `%LOCALAPPDATA%\Programs\GNU Octave\` altında arar.
+`make` olmadığı için LaTeX adımını **ATLANDI** sayar. `.venv` olmayan bir
+Windows makinesinde sonuç `GEÇTİ 4 · KALDI 0 · ATLANDI 4` oldu (Python ve
+LaTeX atlandı, `--hizli` yüzünden Lean de atlandı). Atlananları tek tek
+doğrula:
 
 ```powershell
 python 02-python\src\taylor.py

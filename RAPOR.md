@@ -311,7 +311,7 @@ Katmanları ayrı ayrı kurmak ve çalıştırmak için:
 
 ```bash
 # ortam
-python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+python3 -m venv .venv && grep -v '^manim' requirements.txt > /tmp/req-sayisal.txt && .venv/bin/pip install -r /tmp/req-sayisal.txt
 python3.13 -m venv .venv313 && .venv313/bin/pip install -r requirements.txt
 
 # katmanlar

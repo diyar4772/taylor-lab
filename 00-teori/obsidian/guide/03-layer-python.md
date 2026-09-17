@@ -64,10 +64,12 @@ called from.
 1. **float64 never delivers the verdict.** It only flags *candidates*; mpmath
    decides. See [[10-seven-results#1. The Lagrange bound was never violated]].
 2. **No duplication:** every script imports `taylor.py`.
-3. **`sp.Rational(a)` for mpmath coefficients:** the docstring of
-   `_mpmath_katsayilari` says a float `a` eats precision. The same
-   protection is **missing** in `katsayi_dizisi()`; for the consequence see
-   [[12-gaps-and-next-steps]] (the a=1 coefficients).
+3. **`sp.Rational(a)` for coefficients:** a float `a` eats precision in the
+   high-order derivatives. `_mpmath_katsayilari` always used this
+   protection; `katsayi_dizisi()` was fixed later (see
+   [[12-gaps-and-next-steps]], A1). `polinom_fonksiyonu()` and
+   `polinom_yuvarlama_tabani()` still use a float `a`; at the degrees used
+   there ($N\le12$) this has no effect.
 
 ## Things to tinker with
 
@@ -82,11 +84,12 @@ called from.
    $\approx1.118$ is the read radius? Careful: `ciz()` iterates the axes with
    `zip()` and a 2×3 grid has 6 axes, so the 7th case is **silently dropped**.
    Change `plt.subplots(2, 3, …)` to `(3, 3, …)`.
-3. **Coefficient precision.** In `yakinsaklik_orani.py` → `tablo()`, replace
-   `T.katsayi_dizisi(expr, a, N_MAKS)` with
-   `np.array([float(c) for c in T.taylor_katsayilari(expr, sp.Rational(a), N_MAKS)])`.
-   How far does the ratio-test error of the `1/(1+x^2), a=1` row drop from
-   22.66 %? (Expected: 0.00 %; [[02-study-plan#Session 6 — Reading the radius from coefficients]].)
+3. **Bring the bug back.** In `taylor.py` → `katsayi_dizisi()`, change
+   `sp.Rational(a)` to `a` and run `yakinsaklik_orani.py`. How far does the
+   ratio-test error of the `1/(1+x^2), a=1` row rise from 0.00 %? What happens
+   to the oscillation table? (Expected: 22.66 %. Afterwards run
+   `git restore 02-python/src/taylor.py out/`;
+   [[02-study-plan#Session 6 — Reading the radius from coefficients]].)
 
 ## Related
 

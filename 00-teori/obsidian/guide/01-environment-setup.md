@@ -77,10 +77,10 @@ python 02-python/src/taylor.py
 ```
 
 > [!warning] About the `grep -v` line
-> The README says `.venv/bin/pip install -r requirements.txt`. Because
-> `requirements.txt` contains `manim==0.19.0`, that command will most likely
-> fail on 3.14 while building `av` (the error recorded in `ENVANTER.md`).
-> Filtering manim out is this guide's suggestion; **(not tested)** on Fedora.
+> `requirements.txt` contains `manim==0.19.0`; installing it unchanged into
+> 3.14 fails while building `av` (the error recorded in `ENVANTER.md`). That
+> is why the README and RAPOR filter manim out. The line is **(not tested)**
+> on Fedora.
 
 To open the notebook (`jupyterlab` is in the requirements):
 
@@ -273,12 +273,13 @@ make dogrula          # everything
 make dogrula-hizli    # everything except Lean
 ```
 
-**Windows:** there is no `make`. `bash dogrula.sh` runs in Git Bash, but it
-looks for Python at `.venv/bin/python` (on Windows it is
-`.venv\Scripts\python.exe`), so it marks the Python layers **ATLANDI**
-(skipped), and skips Octave because it is not on the PATH. When tried, the
-result was `GEÇTİ 3 · KALDI 0 · ATLANDI 5` (passed 3, failed 0, skipped 5).
-On Windows, verify the layers one by one:
+**Windows:** there is no `make`, but `bash dogrula.sh --hizli` runs in Git
+Bash. It looks for Python at `.venv/bin/python` or `.venv/Scripts/python.exe`,
+and for Octave on the PATH or under `%LOCALAPPDATA%\Programs\GNU Octave\`.
+Without `make` it marks the LaTeX step **ATLANDI** (skipped). On a Windows
+machine with no `.venv`, the result was `GEÇTİ 4 · KALDI 0 · ATLANDI 4`
+(passed 4, failed 0, skipped 4: Python and LaTeX, plus Lean because of
+`--hizli`). Verify the skipped ones one by one:
 
 ```powershell
 python 02-python\src\taylor.py

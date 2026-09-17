@@ -9,8 +9,10 @@ extends Node2D
 ## İkisi aynı anda, aynı genlikle başlar.
 ##
 ## Oyun şu: genliği seç ve iki sarkacın kaç saniye "birlikte" kaldığını
-## izle. Dayanma süresi = |Δθ| ilk kez 10°'yi aştığı an. 5°'de dakikalar
-## sürer, 90°'de saniyeler. Atılan −θ³/6 teriminin faturası budur.
+## izle. Dayanma süresi = |Δθ| ilk kez 10°'yi aştığı an. Genlik küçüldükçe
+## süre hızla uzar; 5° ve altında |Δθ| ≤ 2θ₀ ≤ 10° olduğu için eşik hiç
+## aşılmaz. 150°'de ise süre saniyenin altına iner. Atılan −θ³/6 teriminin
+## faturası budur.
 
 const G := 9.80665
 const L := 1.0

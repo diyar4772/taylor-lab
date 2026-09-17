@@ -191,17 +191,16 @@ $n\equiv3 \pmod 4$). Hence:
   `1.4142, 1.0, 2.0, 2.0, 1.4142, 1.0, 2.0, 2.0, 1.4142`.
   **There is no limit**; the ratio test's answer depends on where you stop.
 
-> [!warning] About the 22.66 % in the table
-> The repository reports that the ratio test is off by 22.66 % in this row.
-> A check made while writing this guide shows the number is
-> **contaminated by floating-point precision loss**:
-> `katsayi_dizisi(expr, 1.0, 60)` passes the centre as a float; at $n=40$
-> the relative error is ~$10^{-5}$ and $c_{60}$ even has the wrong sign
-> ($+2.55\times10^{-9}$ instead of $-4.66\times10^{-10}$). With exact
-> coefficients at $N=60$, the ratio test gives exactly $\sqrt2$ (0.00 %) and
-> C-H gives 1.4228 (0.61 %). **The lesson is right** (no limit), but its
-> correct evidence is the oscillation above, not the single number in the
-> table. Details: [[12-gaps-and-next-steps]].
+> [!note] Correction: the old 22.66 %
+> The first version of the repository reported that in this row the ratio
+> test was off by 22.66 % and C-H by 1.66 %. A check made while writing this
+> guide showed the numbers were **contaminated by floating-point precision
+> loss**: `katsayi_dizisi` passed the centre as a float; at $n=40$ the
+> relative error was ~$10^{-5}$, and $c_{60}$ even had the wrong sign
+> ($+2.55\times10^{-9}$ instead of $-4.66\times10^{-10}$). After the fix
+> (`sp.Rational(a)`), the table at $N=60$ gives exactly $\sqrt2$ (0.00 %) for
+> the ratio test and 1.4228 (0.61 %) for C-H, and it now includes the
+> oscillation table above. Details: [[12-gaps-and-next-steps]].
 
 **The other rows.**
 
@@ -275,7 +274,8 @@ solution stays finite.
 `kesilme_dogrula()`, `sembolik_dogrulama()`.
 
 **Key columns** (`frobenius.md`): **seri kesiliyor mu?** (does the series
-terminate?), **H(4)**, **ψ(4)**; for Legendre, **kısmi toplam büyümesi**
+terminate?), **H(4)**, **ψ(4)**, **∫ψ² oranı (L=6 / L=4)** (ratio of
+integrals); for Legendre, **kısmi toplam büyümesi**
 (partial-sum growth); in the check, **denklemdeki kalıntı** (residual), all `0 ✓`.
 
 ### How quantization is born from the recurrence terminating
@@ -302,8 +302,11 @@ after 400 terms; the evidence is the **partial-sum growth** column (exactly
 
 - Termination cannot be decided by a **threshold**: for $\lambda=2.5$ the
   coefficients drop below $10^{-14}$ after $n\approx28$ but are not zero.
-- The "normalize edilebilir / PATLIYOR" (normalizable / blows up) verdict is
-  a single-point indicator ($\lvert\psi(4)\rvert<1$), not an integral.
+- The "normalize edilebilir / PATLIYOR" (normalizable / blows up) verdict
+  rests on the normalization integral: the ratio of $\int\psi^2$ over
+  $[-6,6]$ to that over $[-4,4]$. For integer $\lambda$ the ratio is at most
+  $1.000085$; for $\lambda=2.5$ it is $9.5\times10^6$. (The first version only
+  checked $\lvert\psi(4)\rvert<1$.)
 
 ![Hermite](../../../out/gorseller/frobenius_hermite.png)
 

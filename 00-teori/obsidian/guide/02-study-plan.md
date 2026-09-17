@@ -306,26 +306,28 @@ than a limit, and what finite data can and cannot show.
 python 02-python\src\yakinsaklik_orani.py
 ```
 
-Then, in `02-python/src`, open `python` and look at the ratio test as a
-function of $N$ using **exact (rational) coefficients**:
+Look at the "Oran testinin salınımı" (oscillation of the ratio test) part of
+the output. Then, in `02-python/src`, open `python` and see what happens
+when the coefficients are produced **with a floating-point centre**, as the
+previous version of the script did:
 
 ```python
 import numpy as np, sympy as sp, taylor as T
 e = 1/(1 + T.x**2)
-exact = np.array([float(c) for c in T.taylor_katsayilari(e, sp.Integer(1), 60)])
-floaty = T.katsayi_dizisi(e, 1.0, 60)            # what the table uses
-for N in range(52, 61):
-    print(N, round(T.oran_testi_R(exact[:N+1]), 4), round(T.cauchy_hadamard_R(exact[:N+1]), 4))
+exact = T.katsayi_dizisi(e, 1.0, 60)                                     # exact arithmetic now
+floaty = np.array([float(c) for c in T.taylor_katsayilari(e, 1.0, 60)])  # old way
 print("c_60  exact:", exact[60], " float:", floaty[60])
+print("ratio test  exact:", T.oran_testi_R(exact), " float:", T.oran_testi_R(floaty))
 ```
 
-Expected: the ratio test cycles `1.4142, 1.0, 2.0, 2.0, 1.4142, …`; C-H
-stays near `1.423`; `c_60` is `-4.66e-10` exactly but `+2.55e-09` in floating point.
+Expected: `c_60` is `-4.66e-10` exactly but `+2.55e-09` in floating point;
+the ratio test gives `1.4142` with exact and `1.0938` with float coefficients.
 
 **Look at:**
 
 - `out/tablolar/cauchy_hadamard.md`: **C-H kestirimi** (estimate), **C-H
-  hatası** (error), **oran testi** (ratio test), **oran hatası** (ratio error).
+  hatası** (error), **oran testi** (ratio test), **oran hatası** (ratio error);
+  and the $N=52..60$ oscillation table under item 5.
 - `out/gorseller/cauchy_hadamard.png`: $e/n$ (Stirling) in the right panel.
 
   ![Cauchy–Hadamard](../../../out/gorseller/cauchy_hadamard.png)
@@ -342,7 +344,7 @@ stays near `1.423`; `c_60` is `-4.66e-10` exactly but `+2.55e-09` in floating po
 
 1. C-H gives 19.11 for `exp`. Does that contradict $R=\infty$?
 2. For `1/(1+x²)`, $a=1$, why does the ratio test have no limit?
-3. Does the whole 22.66 % in the table come from "there is no limit"?
+3. An older version of the repo said the ratio test was off by 22.66 % in this row. Why was that number wrong?
 4. Why does Mathlib write $\liminf 1/|a_n|^{1/n}$ instead of $\limsup |a_n|^{1/n}$?
 
 ---
@@ -412,10 +414,10 @@ godot --headless --path 05-godot --script res://test_dogrulama.gd
    [![Video 6 — parabola](../kilavuz/ekler/video6-parabol.png)](../../../out/videolar/6-DengeSahnesi.mp4)
    ![[6-DengeSahnesi.mp4]]
 
-   ...then the two curves separating at amplitude 1.3. **Look at this frame
-   critically** (question 3):
+   ...then the two curves separating at amplitude 0.7. The true curve is
+   asymmetric, and its period is longer than the harmonic ghost's:
 
-   ![Video 6 — amplitude 1.3](../kilavuz/ekler/video6-bariyer.png)
+   ![Video 6 — amplitude 0.7](../kilavuz/ekler/video6-anharmonik.png)
 
 2. `out/tablolar/sarkac.md`: **ölçülen T** (measured), **eliptik T**
    (elliptic), **ölçüm-kapalı fark** (measured vs closed form), **Taylor-2
@@ -444,7 +446,7 @@ godot --headless --path 05-godot --script res://test_dogrulama.gd
 
 1. "At 150° the prediction is 76 % wrong." 76 % relative to what?
 2. Why do the log–log slopes go 2, 4, 6, in steps of two?
-3. In video 6, is the separation at amplitude 1.3 really "anharmonicity"?
+3. An older version of video 6 used 1.3 as its last amplitude. Was the separation there "anharmonicity"?
 4. Why does `periyodu_olc` take $T = 4\,t_{\text{first crossing}}$?
 
 ---
@@ -645,14 +647,13 @@ cd ..
    periodic and vanishes for $n\equiv3 \pmod 4$, so successive ratios cycle
    through $\{1,\ 2,\ 2,\ \sqrt2\}$ and **have no limit**, while
    $\limsup|c_n|^{1/n}=1/\sqrt2$ exists.
-3. **No.** `katsayi_dizisi(expr, 1.0, 60)` passes the centre as a float and
-   precision is lost in the high-order derivatives. At $n=40$ the relative
-   error is $\sim10^{-5}$; at $n=60$ even the **sign** of the coefficient is
-   wrong. With exact coefficients, at $N=60$ the ratio test gives exactly
-   $\sqrt2$ and C-H gives 1.4228 (0.61 %). The table's 22.66 % and 1.66 % are
-   contaminated by this loss of precision. The lesson "no limit" is still
-   right, but what shows it is the ratio **oscillating** with $N$, not a
-   single $N$. See [[12-gaps-and-next-steps]].
+3. The old `katsayi_dizisi` passed the centre as a float, and precision was
+   lost in the high-order derivatives. At $n=40$ the relative error was
+   $\sim10^{-5}$; at $n=60$ even the **sign** of the coefficient was wrong.
+   The 22.66 % (and 1.66 % for C-H) were artefacts of that loss. The centre is
+   now passed as `sp.Rational(a)`, and at $N=60$ the ratio test gives exactly
+   $\sqrt2$ and C-H gives 1.4228 (0.61 %). What shows "no limit" is the ratio
+   **oscillating** with $N$, not a single $N$. See [[12-gaps-and-next-steps]].
 4. They are equivalent: $\limsup x_n = 1/\liminf(1/x_n)$ (for positive
    sequences, values in $[0,\infty]$). Mathlib picks this form to express
    the radius directly in $\mathbb{R}_{\ge0}^\infty$ (`p.radius_eq_liminf`).
@@ -686,9 +687,10 @@ cd ..
    $V\approx3.077$). At amplitude 1.3 the energy is $V(x_0+1.3)\approx9.49$,
    above the top. The particle leaves the well and $u$ goes down to about
    $-4.75$. The plot is clipped at $\pm1.6$, hence the flat plateaus. This is
-   not a small anharmonic correction but **barrier crossing**. At amplitude
-   0.7 ($E\approx2.46<3.08$) the particle stays in the well.
-   See [[04-layer-manim]].
+   not a small anharmonic correction but **barrier crossing**. The threshold
+   amplitude is $\approx0.784$, which is why the scene now uses
+   0.25 / 0.5 / 0.7; at 0.7 ($E\approx2.46<3.08$) the particle stays in the
+   well. See [[04-layer-manim]].
 4. The pendulum is released from $\theta_0$ at rest; the first time it
    reaches $\theta=0$ is a quarter period. The `events` mechanism locates
    that moment by root-finding inside the step, which is more precise than
@@ -705,8 +707,11 @@ cd ..
    below $10^{-14}$ after $n\approx28$, yet they are not zero and the function
    blows up. The decision is read from the recurrence **numerator** vanishing
    algebraically.
-3. A single-point criterion: "normalizable" if $|\psi(4)|<1$. That is an
-   indicator, not a normalization integral. See [[12-gaps-and-next-steps]].
+3. On the normalization integral: $\int\psi^2dx$ is computed over $[-4,4]$
+   and then over $[-6,6]$; if the ratio is $<1.01$, the state is
+   "normalizable". For integer $\lambda$ the ratio is $1.000000$–$1.000085$;
+   for $\lambda=2.5$ and $3.7$ it is $9.5\times10^6$ and $1.0\times10^6$. (The
+   old version only looked at $|\psi(4)|<1$.)
 4. For Hermite, `kesilme_derecesi` returns $n=\lambda$: the index where the
    recurrence numerator $2(n-\lambda)$ vanishes. The equation
    $y''-2xy'+2\lambda y=0$ corresponds, for the quantum harmonic oscillator,

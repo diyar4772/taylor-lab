@@ -73,14 +73,18 @@ are in `.gitignore`.
 - Physics: potential energy, small oscillations; what the quantum harmonic
   oscillator is.
 
-## Small inconsistencies in the text
+## Corrections made to the text
 
-- §2 says float64 flags **2232** candidates. That is the Windows count; the
-  README and the table give Fedora's **2224**. Both are correct and
-  platform-dependent ([[10-seven-results#1. The Lagrange bound was never violated]]).
-- The comment on line 2 says to compile "twice"; it takes three passes
-  (see the `Makefile` comment).
-- For §3's sentence "the ratio test is off by 22.66 %", see [[12-gaps-and-next-steps]].
+- §2 used to give only **2232** float64 candidates (the Windows count); the
+  README and the table give Fedora's **2224**. The text now says "about 2200
+  (2224–2232 depending on the platform)"
+  ([[10-seven-results#1. The Lagrange bound was never violated]]).
+- The comment on line 2 said to compile "twice"; it now says three times.
+- §3's sentence "the ratio test is off by 22.66 %" was replaced by a
+  description of the ratio test oscillating with $N$
+  ([[12-gaps-and-next-steps]], A1).
+- On Windows/MiKTeX the build gives 0 errors and 1 warning (a babel
+  configuration warning).
 
 ## Things to tinker with
 

@@ -227,6 +227,13 @@ def hermite_incelemesi() -> list[list[str]]:
     """
     satirlar = []
     xs_test = np.array([4.0])
+
+    def norm_integrali(a: np.ndarray, L: float) -> float:
+        """∫_{-L}^{L} |ψ|² dx, ψ = H(x)·e^(-x²/2) (yamuk kuralı, 8001 nokta)."""
+        xs = np.linspace(-L, L, 8001)
+        psi = seri_degeri(a, xs) * np.exp(-xs**2 / 2)
+        return float(np.trapezoid(psi**2, xs))
+
     for lam in (0.0, 1.0, 2.0, 3.0, 2.5, 3.7):
         # Pariteyi λ'ya uydur: tam sayı λ için kesilme ancak eşleşen parite
         # zincirinde olur. Tam sayı olmayan λ'da parite fark etmez, a_0 ile
@@ -238,17 +245,25 @@ def hermite_incelemesi() -> list[list[str]]:
         assert kesilme_dogrula(a, kes), f"λ={lam}: kesilme iddiası tutmuyor"
         H = float(seri_degeri(a, xs_test)[0])
         psi = H * float(np.exp(-xs_test[0] ** 2 / 2))
+        # Normalizasyon ölçütü tek noktaya değil integrale bakar: ψ gerçekten
+        # sönüyorsa ∫|ψ|² pencere büyüdükçe sabitlenir (oran ≈ 1); ψ ~ e^(+x²/2)
+        # ise ∫|ψ|² ~ e^(L²) gibi büyür ve oran patlar.
+        n4, n6 = norm_integrali(a, 4.0), norm_integrali(a, 6.0)
+        oran = n6 / n4
+        normalize = oran < 1.01
         satirlar.append([
             f"{lam:g}",
             f"evet, derece {kes}" if kes is not None else "HAYIR",
             f"{H:.4e}",
             f"{psi:.4e}",
-            "normalize edilebilir" if abs(psi) < 1.0 else "PATLIYOR",
+            f"{oran:.6f}" if oran < 1e3 else f"{oran:.3e}",
+            "normalize edilebilir" if normalize else "PATLIYOR",
         ])
         print(f"  λ={lam:<5g} kesiliyor mu: "
               f"{(f'evet (derece {kes})') if kes is not None else 'HAYIR':<18} "
-              f"H(4)={H:>12.4e}   ψ(4)=H·e^(-8)={psi:>12.4e}   "
-              f"{'OK' if abs(psi) < 1.0 else 'PATLIYOR'}")
+              f"H(4)={H:>12.4e}   ψ(4)={psi:>12.4e}   "
+              f"∫|ψ|²(L=6)/∫|ψ|²(L=4)={oran:>12.6e}   "
+              f"{'OK' if normalize else 'PATLIYOR'}")
     return satirlar
 
 
@@ -411,9 +426,15 @@ def main() -> int:
         "Kuantum harmonik osilatörde dalga fonksiyonu `ψ = H(x)·e^(−x²/2)`. "
         "H seri olarak kalırsa büyük x'te `e^(x²)` gibi büyür ve "
         "`ψ ~ e^(+x²/2)` olur — normalize edilemez, yani parçacığın bulunma "
-        "olasılığı sonsuza gider. Aşağıdaki tablo x=4'te bunu gösteriyor:\n\n"
+        "olasılığı sonsuza gider. Tablo `x=4`'teki değerleri ve karar ölçütünü "
+        "verir. Karar tek bir noktaya değil, normalizasyon integraline "
+        "dayanır: `∫|ψ|² dx` önce `[−4, 4]`, sonra `[−6, 6]` üzerinde "
+        "hesaplanır. ψ gerçekten sönüyorsa pencereyi büyütmek integrali "
+        "değiştirmez (oran ≈ 1); ψ ~ e^(+x²/2) ise integral e^(L²) gibi "
+        "büyür. Eşik: oran < 1.01.\n\n"
         + ortam.markdown_tablo(
-            ["λ", "seri kesiliyor mu?", "H(4)", "ψ(4) = H(4)·e⁻⁸", "durum"],
+            ["λ", "seri kesiliyor mu?", "H(4)", "ψ(4) = H(4)·e⁻⁸",
+             "∫ψ² oranı (L=6 / L=4)", "durum"],
             hermite_satirlari)
         + "\n\nKesilme şartı `λ = n`. Kuantum mekaniği dersinde "
           "`E_n = ℏω(n + ½)` diye ezberlenen formüldeki `n`, **bu rekürans "

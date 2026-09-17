@@ -298,27 +298,26 @@ ve sonlu veriyle neyin görülüp neyin görülemeyeceğini anlamak.
 python 02-python\src\yakinsaklik_orani.py
 ```
 
-Ardından `02-python/src` içinde `python` aç ve oran testinin $N$'e göre
-nasıl davrandığını **tam (rasyonel) katsayılarla** gör:
+Betiğin çıktısındaki "Oran testinin salınımı" bölümüne bak. Ardından
+`02-python/src` içinde `python` aç ve katsayıları **merkez kayan noktalı
+verilerek** (betiğin önceki sürümünün yaptığı gibi) üretince ne olduğunu gör:
 
 ```python
 import numpy as np, sympy as sp, taylor as T
 e = 1/(1 + T.x**2)
-tam = np.array([float(c) for c in T.taylor_katsayilari(e, sp.Integer(1), 60)])
-kayan = T.katsayi_dizisi(e, 1.0, 60)            # tablonun kullandığı
-for N in range(52, 61):
-    print(N, round(T.oran_testi_R(tam[:N+1]), 4), round(T.cauchy_hadamard_R(tam[:N+1]), 4))
+tam = T.katsayi_dizisi(e, 1.0, 60)                                  # artık tam aritmetik
+kayan = np.array([float(c) for c in T.taylor_katsayilari(e, 1.0, 60)])  # eski yöntem
 print("c_60  tam:", tam[60], " kayan:", kayan[60])
+print("oran testi  tam:", T.oran_testi_R(tam), " kayan:", T.oran_testi_R(kayan))
 ```
 
-Beklenen: oran testi `1.4142, 1.0, 2.0, 2.0, 1.4142, …` diye dönüp durur;
-C-H ≈ `1.423`'te sabit kalır; `c_60` tam değeri `-4.66e-10`, kayan noktalı
-değeri `+2.55e-09`.
+Beklenen: `c_60` tam değeri `-4.66e-10`, kayan noktalı değeri `+2.55e-09`;
+oran testi tam katsayılarla `1.4142`, kayan noktalı katsayılarla `1.0938`.
 
 **Bak:**
 
 - `out/tablolar/cauchy_hadamard.md`: **C-H kestirimi**, **C-H hatası**,
-  **oran testi**, **oran hatası**.
+  **oran testi**, **oran hatası**; 5. maddedeki $N=52..60$ salınım tablosu.
 - `out/gorseller/cauchy_hadamard.png`: sağ panelde $e/n$ (Stirling).
 
   ![Cauchy–Hadamard](../../../out/gorseller/cauchy_hadamard.png)
@@ -335,7 +334,7 @@ değeri `+2.55e-09`.
 
 1. `exp` için C-H 19,11 çıkıyor. $R=\infty$ ile çelişiyor mu?
 2. `1/(1+x²)`, $a=1$ için oran testinin limiti neden yok?
-3. Tablodaki %22,66'nın hepsi "limit yok" gerçeğinden mi geliyor?
+3. Bu satır deponun eski sürümünde "oran testi %22,66 sapıyor" diyordu. O sayı neden yanlıştı?
 4. Mathlib neden $\limsup |a_n|^{1/n}$ yerine $\liminf 1/|a_n|^{1/n}$ yazıyor?
 
 ---
@@ -406,10 +405,10 @@ godot --headless --path 05-godot --script res://test_dogrulama.gd
    [![Video 6 — parabol](ekler/video6-parabol.png)](../../../out/videolar/6-DengeSahnesi.mp4)
    ![[6-DengeSahnesi.mp4]]
 
-   ...sonra genlik 1,3'te iki eğrinin ayrışması. **Bu kareye eleştirel bak**
-   (Soru 3):
+   ...sonra genlik 0,7'de iki eğrinin ayrışması. Gerçek eğri asimetrik, ve
+   periyodu harmonik hayaletten uzun:
 
-   ![Video 6 — genlik 1.3](ekler/video6-bariyer.png)
+   ![Video 6 — genlik 0.7](ekler/video6-anharmonik.png)
 
 2. `out/tablolar/sarkac.md`: **ölçülen T**, **eliptik T**, **ölçüm-kapalı
    fark**, **Taylor-2 hatası**, **Taylor-4 hatası**.
@@ -437,7 +436,7 @@ godot --headless --path 05-godot --script res://test_dogrulama.gd
 
 1. "150°'de tahmin %76 yanlış." %76 neye göre?
 2. Log–log eğimleri neden 2, 4, 6 diye ikişer artıyor?
-3. Video 6'da genlik 1,3'teki ayrışma gerçekten "anharmonisite" mi?
+3. Video 6'nın eski sürümü son genlik olarak 1,3 kullanıyordu. O genlikteki ayrışma "anharmonisite" miydi?
 4. `periyodu_olc` neden $T = 4\,t_{\text{ilk geçiş}}$ alıyor?
 
 ---
@@ -627,13 +626,13 @@ cd ..
    periyodiktir ve $n\equiv3 \pmod 4$ için sıfırdır. Bu yüzden ardışık oranlar
    $\{1,\ 2,\ 2,\ \sqrt2\}$ arasında döner; oranın **limiti yoktur**.
    $\limsup|c_n|^{1/n}=1/\sqrt2$ ise vardır.
-3. **Hayır.** `katsayi_dizisi(expr, 1.0, 60)`, $a$'yı kayan noktalı sayı olarak
-   verir ve yüksek mertebeli türevlerde hassasiyet kaybolur. $n=40$'ta bağıl hata
-   $\sim10^{-5}$, $n=60$'ta katsayının **işareti bile yanlış**. Tam katsayılarla
-   $N=60$'ta oran testi tam $\sqrt2$, C-H 1,4228 (%0,61) çıkar. Tablodaki %22,66
-   ve %1,66 bu hassasiyet kaybıyla kirlenmiş sayılardır. "Limit yok" dersi yine
-   doğrudur, ama onu gösteren şey tek bir $N$ değil, oranın $N$ ile **salınmasıdır**.
-   Bkz. [[12-eksikler-ve-devam]].
+3. Eski `katsayi_dizisi`, $a$'yı kayan noktalı sayı olarak veriyordu ve yüksek
+   mertebeli türevlerde hassasiyet kayboluyordu. $n=40$'ta bağıl hata
+   $\sim10^{-5}$, $n=60$'ta katsayının **işareti bile yanlış**tı. %22,66 (ve C-H
+   için %1,66) bu kayıptan doğan sahte sayılardı. Artık merkez `sp.Rational(a)`
+   ile veriliyor ve $N=60$'ta oran testi tam $\sqrt2$, C-H 1,4228 (%0,61)
+   çıkıyor. "Limit yok" dersini gösteren şey tek bir $N$ değil, oranın $N$ ile
+   **salınmasıdır**. Bkz. [[12-eksikler-ve-devam]].
 4. İkisi denktir: $\limsup x_n = 1/\liminf(1/x_n)$ (pozitif diziler ve
    $[0,\infty]$ değerleri için). Mathlib yarıçapı doğrudan $\mathbb{R}_{\ge0}^\infty$'da
    ifade etmek için bu biçimi seçer (`p.radius_eq_liminf`).
@@ -666,8 +665,9 @@ cd ..
    enerji $V(x_0+1{,}3)\approx9{,}49$, tepeden yüksek. Parçacık kuyudan çıkar,
    $u$ yaklaşık $-4{,}75$'e kadar gider. Grafik $\pm1{,}6$'da kırpıldığı için
    düz platolar görünür. Bu küçük bir anharmonik düzeltme değil, **bariyer
-   aşımıdır**. Genlik 0,7'de ($E\approx2{,}46<3{,}08$) parçacık kuyuda kalır.
-   Bkz. [[04-katman-manim]].
+   aşımıdır**. Eşik genlik $\approx0{,}784$. Sahne bu yüzden artık
+   0,25 / 0,5 / 0,7 kullanıyor; 0,7'de ($E\approx2{,}46<3{,}08$) parçacık kuyuda
+   kalır. Bkz. [[04-katman-manim]].
 4. Sarkaç $\theta_0$'dan sıfır hızla bırakılır; ilk kez $\theta=0$'a vardığı an
    çeyrek periyottur. Olay (`events`) mekanizması bu anı adım içinde kök bularak
    bulur, ızgaradan daha hassastır.
@@ -682,9 +682,11 @@ cd ..
    için katsayılar $e^{x^2}$'ninkiler gibi azalır ve $n\approx28$'den sonra
    $10^{-14}$'ün altına iner, ama sıfır değildir; fonksiyon patlar. Karar
    rekürans **payının** cebirsel olarak sıfırlanmasından okunur.
-3. Tek noktalı bir ölçüt: $|\psi(4)|<1$ ise "normalize edilebilir". Bu bir
-   normalizasyon integrali değildir, bir göstergedir.
-   Bkz. [[12-eksikler-ve-devam]].
+3. Normalizasyon integraline: $\int\psi^2dx$ önce $[-4,4]$, sonra $[-6,6]$
+   üzerinde hesaplanır. Oran $<1{,}01$ ise "normalize edilebilir". Tam sayı
+   $\lambda$'da oran $1{,}000000$–$1{,}000085$, $\lambda=2{,}5$ ve $3{,}7$'de
+   $9{,}5\times10^6$ ve $1{,}0\times10^6$. (Eski sürüm yalnızca $|\psi(4)|<1$'e
+   bakıyordu.)
 4. `kesilme_derecesi` Hermite için $n=\lambda$ döndürür: rekürans payının
    $2(n-\lambda)$ sıfırlandığı indeks. $y''-2xy'+2\lambda y=0$ denklemi kuantum
    harmonik osilatörde $E=\hbar\omega(\lambda+\tfrac12)$'ye karşılık gelir.

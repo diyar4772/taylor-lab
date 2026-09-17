@@ -71,14 +71,17 @@ make teori
 - Kompleks analiz: holomorf fonksiyon, kutup, esas tekillik.
 - Fizik: potansiyel enerji, küçük salınımlar; kuantum harmonik osilatörün ne olduğu.
 
-## Metindeki iki küçük tutarsızlık
+## Metinde yapılan düzeltmeler
 
-- §2 float64'te **2232** aday ihlal yazar. Bu Windows sayısıdır; README ve
-  tablo Fedora'daki **2224**'ü verir. İkisi de doğrudur, platforma bağlıdır
+- §2 önceden float64 için yalnızca **2232** aday yazıyordu (Windows sayısı);
+  README ve tablo Fedora'daki **2224**'ü verir. Metin artık "yaklaşık 2200
+  (platforma göre 2224–2232)" diyor
   ([[10-yedi-sonuc#1. Lagrange sınırı hiç ihlal edilmedi]]).
-- Dosyanın 2. satırındaki yorum "iki kez" derler der; doğrusu üç geçiştir
-  (`Makefile` açıklaması).
-- §3'ün "oran testi %22,66 sapar" cümlesi için bkz. [[12-eksikler-ve-devam]].
+- 2. satırdaki yorum "iki kez" derliyordu; "üç kez" olarak düzeltildi.
+- §3'teki "oran testi %22,66 sapar" cümlesi, oran testinin $N$ ile salınmasını
+  anlatan metinle değiştirildi ([[12-eksikler-ve-devam]], A1).
+- Windows/MiKTeX'te derleme 0 hata ve 1 uyarı (babel yapılandırma uyarısı)
+  verir.
 
 ## Kurcalama önerileri
 

@@ -173,6 +173,28 @@ def seyreklik_tuzagi() -> str:
             f"uygulanır.")
 
 
+def salinim_tablosu() -> list[list[str]]:
+    """1/(1+x^2), a=1: oran testinin N'e göre salınımı, C-H'nin kararlılığı.
+
+    En yakın iki tekillik (i ve -i) merkeze eşit uzaklıkta olduğu için
+    katsayılar c_n = (-1)^n 2^(-(n+1)/2) sin((n+1)π/4) biçimindedir; sin
+    çarpanı 4 periyotla döner ve n ≡ 3 (mod 4) için katsayı tam sıfırdır.
+    Oran testinin sonucu bu yüzden hangi N'de durulduğuna bağlıdır — tek bir
+    N'deki değer hiçbir şey kanıtlamaz, salınımın kendisi kanıttır.
+    """
+    R = math.sqrt(2.0)
+    kats = T.katsayi_dizisi(1 / (1 + T.x**2), 1.0, N_MAKS)
+    satirlar = []
+    for N in range(N_MAKS - 8, N_MAKS + 1):
+        c = kats[:N + 1]
+        o = T.oran_testi_R(c)
+        ch = T.cauchy_hadamard_R(c, son_k=12)
+        satirlar.append([str(N), f"{o:.4f}", f"{abs(o - R) / R * 100:.2f}%",
+                         f"{ch:.4f}", f"{abs(ch - R) / R * 100:.2f}%"])
+        print(f"  N={N:>2}   oran testi={o:.4f}   C-H={ch:.4f}")
+    return satirlar
+
+
 def main() -> int:
     ortam.baslik_yaz("Cauchy-Hadamard ile R kestirimi (katsayılardan)")
     print(f"  N = {N_MAKS} katsayı, limsup son 12 sıfırsız terimden\n")
@@ -180,6 +202,9 @@ def main() -> int:
 
     ortam.baslik_yaz("Seyrek seri tuzağı")
     seyreklik_metni = seyreklik_tuzagi()
+
+    ortam.baslik_yaz("Oran testinin salınımı: 1/(1+x^2), a=1")
+    salinim_satirlari = salinim_tablosu()
 
     ortam.baslik_yaz("Grafik")
     yakinsama_grafigi()
@@ -208,15 +233,26 @@ def main() -> int:
           "sütununun `exp` satırında sonsuz yerine sonlu bir sayı çıkması "
           "**yöntemin dürüst sınırıdır**, hata değil.\n\n"
           "**4. Seyreklik.**\n\n" + seyreklik_metni + "\n\n"
-          "**5. Oran testi her zaman çalışmaz — `1/(1+x²)`, `a=1` satırına "
-          "bakın.** Orada C-H %1.66 hatayla doğru cevabı verirken oran testi "
-          "%22.66 sapar. Sebep şu: bu merkez için en yakın iki tekillik "
-          "`i` ve `−i`, `a=1`'e **eşit uzaklıkta ama farklı yönlerdedir**. "
-          "Katsayılar bu yüzden salınır ve `|a_n/a_(n+1)|` oranının bir "
-          "LİMİTİ YOKTUR. Oran testi ancak limit varsa geçerlidir; "
-          "Cauchy-Hadamard ise limsup kullandığı için limit olmasa da "
-          "çalışır. Teoremin neden limit değil limsup ile kurulduğu "
-          "tam olarak budur.\n\n"
+          "**5. Oran testi her zaman çalışmaz — `1/(1+x²)`, `a=1`.** Bu "
+          "merkez için en yakın iki tekillik `i` ve `−i`, `a=1`'e **eşit "
+          "uzaklıkta ama farklı yönlerdedir**. Katsayılar "
+          "`c_n = (−1)^n · 2^(−(n+1)/2) · sin((n+1)π/4)` biçimindedir: sin "
+          "çarpanı 4 periyotla döner ve `n ≡ 3 (mod 4)` için katsayı tam "
+          "sıfırdır. Bu yüzden `|a_n/a_(n+d)|` oranının bir LİMİTİ YOKTUR ve "
+          "oran testinin cevabı hangi N'de durulduğuna bağlıdır. Yukarıdaki "
+          f"tabloda (N={N_MAKS}) oran testi tesadüfen tam √2 veriyor; N'i "
+          "birer birer değiştirince:\n\n"
+        + ortam.markdown_tablo(
+            ["N", "oran testi", "oran hatası", "C-H kestirimi", "C-H hatası"],
+            salinim_satirlari)
+        + "\n\nOran testi √2, 1, 2 değerleri arasında dolaşır ve hiçbir yere "
+          "yerleşmez; Cauchy-Hadamard ise limsup kullandığı için yaklaşık "
+          "%0.6 sapmayla yerinde durur. Teoremin neden limit değil limsup "
+          "ile kurulduğu tam olarak budur.\n\n"
+          "_Not: katsayılar merkez `sp.Rational(a)` olarak verilip tam "
+          "aritmetikle üretilir. Merkez float verildiğinde (bu betiğin önceki "
+          "sürümü) n ≳ 20'den sonra yıkıcı sadeleşme katsayıları bozuyor ve "
+          "bu satırda sahte bir %22.66 sapma üretiyordu._\n\n"
           "**6. İki bağımsız yol, aynı sayı.** Bu tablodaki R değerleri "
           "yalnızca katsayı dizisine bakılarak elde edildi — fonksiyonun "
           "kompleks düzlemdeki tekilliklerine hiç bakılmadan. "

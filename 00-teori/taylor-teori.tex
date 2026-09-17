@@ -1,5 +1,5 @@
 % Taylor ve Maclaurin Serileri — teorik metin
-% Derleme:  pdflatex -interaction=nonstopmode taylor-teori.tex   (iki kez)
+% Derleme:  pdflatex -interaction=nonstopmode taylor-teori.tex   (üç kez)
 \documentclass[11pt,a4paper]{article}
 
 \usepackage[T1]{fontenc}
@@ -193,7 +193,7 @@ sayısı sıfırdır}.
 
 Ancak burada ciddi bir sayısal tuzak vardır ve dürüstlük gereği açıkça
 yazılmalıdır. Çift duyarlıklı (float64) aritmetikle bakıldığında
-$2232$ nokta sınırı \emph{aşıyor görünür}. Örneğin $f=\exp$, $a=1$, $N=12$,
+yaklaşık $2200$ nokta (platforma göre $2224$--$2232$) sınırı \emph{aşıyor görünür}. Örneğin $f=\exp$, $a=1$, $N=12$,
 $x=0{,}996$ için
 \[
   \text{gerçek hata} \approx 2{,}93\times 10^{-41},
@@ -316,10 +316,15 @@ ortaya çıkardığı üç dürüst sınır:
 \item \textbf{Cebirsel katsayılar yavaştır.} $\ln(1+x)$ ve $\sqrt{1+x}$ için
       $n=60$'ta bile \%7--13 sapma kalır. $\limsup$'ın doğası budur.
 \item \textbf{Oran testi her zaman çalışmaz.} $f = 1/(1+x^2)$, $a=1$ için
-      C--H \%1{,}66 hatayla doğru cevabı verirken oran testi \%22{,}66 sapar.
-      Sebep: $i$ ve $-i$, $a=1$'e \emph{eşit uzaklıkta ama farklı yönlerdedir};
-      katsayılar salınır ve $|a_n/a_{n+1}|$ oranının limiti yoktur. Teoremin
-      neden limit değil $\limsup$ ile kurulduğu tam olarak budur.
+      $i$ ve $-i$, $a=1$'e \emph{eşit uzaklıkta ama farklı yönlerdedir};
+      katsayılar $c_n=(-1)^n 2^{-(n+1)/2}\sin\frac{(n+1)\pi}{4}$ biçiminde
+      salınır ve $|a_n/a_{n+d}|$ oranının limiti yoktur: $N=52,\dots,60$ için
+      oran testi sırasıyla $\sqrt2,1,2,2,\sqrt2,1,2,2,\sqrt2$ verir. Aynı
+      aralıkta C--H $1{,}423$--$1{,}424$'te (\%0{,}6--0{,}7 sapma) sabit
+      kalır. Teoremin neden limit değil $\limsup$ ile kurulduğu tam olarak
+      budur. (Katsayılar tam aritmetikle üretilmelidir: merkez kayan noktalı
+      verildiğinde yüksek mertebeli katsayılar bozulur ve sahte bir sapma
+      görülür.)
 \end{enumerate}
 
 % =====================================================================

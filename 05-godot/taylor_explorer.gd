@@ -167,7 +167,7 @@ func katsayilar(a: float, N: int) -> PackedFloat64Array:
 	match KATALOG[fonksiyon_no]:
 		"1/(1+x^2)":
 			# 1/(1+x^2) = (1/2i)[1/(z-i) - 1/(z+i)] açılımının reel hali:
-			# c_n = -Im( (a-i)^(-(n+1)) ) biçiminde toplanır. Burada
+			# c_n = (-1)^n * Im( (a-i)^(-(n+1)) ) biçiminde toplanır. Burada
 			# kompleks aritmetiği elle yürütüyoruz: p = (a-i)^(n+1)
 			var pr := a
 			var pi := -1.0

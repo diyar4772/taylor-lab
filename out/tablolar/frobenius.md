@@ -36,16 +36,16 @@ Tam sayı buradan çıkar. Kimse dayatmadı; seri başka seçenek bırakmadı.
 y'' − 2xy' + 2λy = 0      a_{n+2} = 2(n − λ) / [(n+1)(n+2)] · a_n
 ```
 
-Kuantum harmonik osilatörde dalga fonksiyonu `ψ = H(x)·e^(−x²/2)`. H seri olarak kalırsa büyük x'te `e^(x²)` gibi büyür ve `ψ ~ e^(+x²/2)` olur — normalize edilemez, yani parçacığın bulunma olasılığı sonsuza gider. Aşağıdaki tablo x=4'te bunu gösteriyor:
+Kuantum harmonik osilatörde dalga fonksiyonu `ψ = H(x)·e^(−x²/2)`. H seri olarak kalırsa büyük x'te `e^(x²)` gibi büyür ve `ψ ~ e^(+x²/2)` olur — normalize edilemez, yani parçacığın bulunma olasılığı sonsuza gider. Tablo `x=4`'teki değerleri ve karar ölçütünü verir. Karar tek bir noktaya değil, normalizasyon integraline dayanır: `∫|ψ|² dx` önce `[−4, 4]`, sonra `[−6, 6]` üzerinde hesaplanır. ψ gerçekten sönüyorsa pencereyi büyütmek integrali değiştirmez (oran ≈ 1); ψ ~ e^(+x²/2) ise integral e^(L²) gibi büyür. Eşik: oran < 1.01.
 
-| λ   | seri kesiliyor mu? | H(4)        | ψ(4) = H(4)·e⁻⁸ | durum                |
-|-----|--------------------|-------------|-----------------|----------------------|
-| 0   | evet, derece 0     | 1.0000e+00  | 3.3546e-04      | normalize edilebilir |
-| 1   | evet, derece 1     | 4.0000e+00  | 1.3419e-03      | normalize edilebilir |
-| 2   | evet, derece 2     | -3.1000e+01 | -1.0399e-02     | normalize edilebilir |
-| 3   | evet, derece 3     | -3.8667e+01 | -1.2971e-02     | normalize edilebilir |
-| 2.5 | HAYIR              | 4.2513e+04  | 1.4261e+01      | PATLIYOR             |
-| 3.7 | HAYIR              | 1.0531e+04  | 3.5328e+00      | PATLIYOR             |
+| λ   | seri kesiliyor mu? | H(4)        | ψ(4) = H(4)·e⁻⁸ | ∫ψ² oranı (L=6 / L=4) | durum                |
+|-----|--------------------|-------------|-----------------|-----------------------|----------------------|
+| 0   | evet, derece 0     | 1.0000e+00  | 3.3546e-04      | 1.000000              | normalize edilebilir |
+| 1   | evet, derece 1     | 4.0000e+00  | 1.3419e-03      | 1.000001              | normalize edilebilir |
+| 2   | evet, derece 2     | -3.1000e+01 | -1.0399e-02     | 1.000008              | normalize edilebilir |
+| 3   | evet, derece 3     | -3.8667e+01 | -1.2971e-02     | 1.000085              | normalize edilebilir |
+| 2.5 | HAYIR              | 4.2513e+04  | 1.4261e+01      | 9.522e+06             | PATLIYOR             |
+| 3.7 | HAYIR              | 1.0531e+04  | 3.5328e+00      | 1.025e+06             | PATLIYOR             |
 
 Kesilme şartı `λ = n`. Kuantum mekaniği dersinde `E_n = ℏω(n + ½)` diye ezberlenen formüldeki `n`, **bu rekürans hangi indekste sıfırlandıysa odur**. Enerji kuantumlanmış, çünkü seri ancak tam sayılarda kesiliyor.
 

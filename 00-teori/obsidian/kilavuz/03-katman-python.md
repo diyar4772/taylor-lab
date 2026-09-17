@@ -63,10 +63,12 @@ tanımlıdır; betik hangi klasörden çağrılırsa çağrılsın aynı yere ya
 1. **Hüküm float64'e bırakılmaz.** Float64 yalnızca *aday* işaretler;
    karar mpmath'indir. Bkz. [[10-yedi-sonuc#1. Lagrange sınırı hiç ihlal edilmedi]].
 2. **Tekrar yok:** bütün betikler `taylor.py`'ı içe aktarır.
-3. **mpmath katsayıları için `sp.Rational(a)`:** `_mpmath_katsayilari`
-   docstring'i, kayan noktalı `a`'nın hassasiyeti yediğini açıkça söyler.
-   Ancak aynı koruma `katsayi_dizisi()`'de **yok**. Sonucu için
-   [[12-eksikler-ve-devam]] (a=1 katsayıları).
+3. **Katsayılar için `sp.Rational(a)`:** kayan noktalı bir `a` yüksek
+   mertebeli türevlerde hassasiyeti yer. `_mpmath_katsayilari` baştan beri bu
+   korumayı kullanıyordu; `katsayi_dizisi()` ise sonradan düzeltildi (bkz.
+   [[12-eksikler-ve-devam]], A1). `polinom_fonksiyonu()` ve
+   `polinom_yuvarlama_tabani()` hâlâ float `a` kullanır; oradaki dereceler
+   ($N\le12$) için etkisi yoktur.
 
 ## Kurcalama önerileri
 
@@ -80,11 +82,12 @@ tanımlıdır; betik hangi klasörden çağrılırsa çağrılsın aynı yere ya
    ekle. Okunan $R$ teorik $\approx1{,}118$'in yüzde kaç altında kalıyor?
    Dikkat: `ciz()` eksenleri `zip()` ile gezer ve 2×3 ızgarada 6 eksen var.
    7. durum **sessizce atlanır**. `plt.subplots(2, 3, …)`'ü `(3, 3, …)` yap.
-3. **Katsayı hassasiyeti.** `yakinsaklik_orani.py` → `tablo()` içinde
-   `T.katsayi_dizisi(expr, a, N_MAKS)` yerine
-   `np.array([float(c) for c in T.taylor_katsayilari(expr, sp.Rational(a), N_MAKS)])`
-   kullan. `1/(1+x^2), a=1` satırının oran testi hatası %22,66'dan kaça iniyor?
-   (Beklenen: %0,00. [[02-calisma-plani#Oturum 6 — Yarıçapı katsayılardan okumak]])
+3. **Hatayı geri getir.** `taylor.py` → `katsayi_dizisi()` içinde
+   `sp.Rational(a)`'yı `a` yap ve `yakinsaklik_orani.py`'ı çalıştır.
+   `1/(1+x^2), a=1` satırının oran testi hatası %0,00'dan kaça çıkıyor?
+   Salınım tablosu ne oluyor? (Beklenen: %22,66. İşin bitince
+   `git restore 02-python/src/taylor.py out/`.
+   [[02-calisma-plani#Oturum 6 — Yarıçapı katsayılardan okumak]])
 
 ## İlgili
 

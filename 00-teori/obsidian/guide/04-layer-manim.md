@@ -30,7 +30,7 @@ click the thumbnail to open the video.
 | `scenes/s03_kalan_terimi.py` | `KalanTerimiSahnesi` (remainder) | 33.7 s | true error and bound on a log axis, $N=1..10$ | for $\sin$, $\sup\lvert f^{(N+1)}\rvert=1$; test point $x=2$, $N=10$ |
 | `scenes/s04_kompleks_yaricap.py` | `KompleksYaricapSahnesi` (complex radius) | 57.9 s | real axis → poles $\pm i$ → heat map ($N=2,4,8,16,30$) → centres $a=0.7;\,1.4;\,2.0$ | `PENCERE = 2.6`, `IZGARA = 420` |
 | `scenes/s05_analitik_degil.py` | `AnalitikDegilSahnesi` (not analytic) | 47.1 s | $f^{(n)}(0)=0$, series $\equiv0$, $f(1)=0.3679$, $z\to0$ from two directions | `f_guvenli()` |
-| `scenes/s06_denge.py` | `DengeSahnesi` (equilibrium) | 54.9 s | arbitrary $V(x)$, $x_0\approx2.1918$, $k=V''(x_0)\approx5.880$; amplitudes 0.25 / 0.7 / 1.3 | `V()`, `genlikler` |
+| `scenes/s06_denge.py` | `DengeSahnesi` (equilibrium) | 54.9 s | arbitrary $V(x)$, $x_0\approx2.1918$, $k=V''(x_0)\approx5.880$; amplitudes 0.25 / 0.5 / 0.7 | `V()`, `genlikler` |
 | `scenes/tema.py` | — | — | colours, font sizes, `baslik()`, `eksen()`, `etiket_kutusu()` | — |
 | `render.sh` | — | — | renders scenes and copies them to `out/videolar/<n>-<Class>.mp4` | `KALITE` (default `-qh`) |
 
@@ -78,34 +78,36 @@ PATH="$PWD/.venv313/bin:$PATH" bash 01-manim/render.sh 4     # 1080p60, overwrit
 - A LaTeX installation (`MathTex` → dvisvgm).
 - For scene 4: grid computations with numpy, `ImageMobject`.
 
-## Critical note: the last part of video 6
+## Correction note: the last part of video 6
 
-![Amplitude 1.3](../kilavuz/ekler/video6-bariyer.png)
+![Amplitude 0.7](../kilavuz/ekler/video6-anharmonik.png)
 
-The closing text says, in Turkish, that as the amplitude grows the dropped
-$\tfrac16V'''(x_0)u^3$ term comes back, and that this is anharmonicity. That
-holds for amplitude 0.7; it does **not** hold for 1.3:
+The first version of the scene used amplitudes 0.25 / 0.7 / **1.3**, and its
+closing text said (in Turkish) that as the amplitude grows the dropped
+$\tfrac16V'''(x_0)u^3$ term comes back, "and that is anharmonicity". For
+1.3 that was not true:
 
 - The potential's critical points are $-1.248$ (left minimum), $0.249$
   (barrier top, $V\approx3.077$) and $2.192$ (right minimum).
 - At amplitude 1.3 the energy is $V(x_0+1.3)\approx9.49 > 3.077$. The
-  particle crosses the barrier and $u$ goes down to about $-4.75$.
-- The plot clips with `np.clip(u, -1.6, 1.6)`, so the escape shows up as
-  **flat plateaus**. The on-screen "ayrışma: 3.544" (separation) measures an
-  escape from the well, not a phase shift.
-- The label also renders with parentheses, `genlik = (1.3)`
-  (`formul(rf"\text{{genlik}}=({A})")`).
+  particle crossed the barrier and $u$ went down to about $-4.75$. The plot
+  clips with `np.clip(u, -1.6, 1.6)`, so the escape showed up as **flat
+  plateaus**.
+- The threshold amplitude, from $V(x_0+A)=V_{\text{top}}$, is $A\approx0.784$.
 
-Computed by running `V`, `dV`, `ddV` and `denge_bul` with `solve_ivp` (see
-[[02-study-plan#Session 8 — The dropped term returns in the period]]).
+Fix: `genlikler = [0.25, 0.5, 0.7]`, and the video was re-rendered at 1080p60
+(length unchanged: 54.9 s). The last amplitude now shows
+"genlik = 0.7, ayrışma: 1.685" (amplitude, separation). The true curve stays
+in the well but is clearly asymmetric with a longer period, so the closing
+text now describes what is on screen. The parentheses in the
+`genlik = (1.3)` label were also removed.
 
 ## Things to tinker with
 
-1. **Find the barrier threshold.** First solve $V(x_0+A)=V_{\text{top}}$ with
-   `brentq` in Python. You should get $A\approx0.784$; even $A=1.0$ crosses
-   the barrier ($E\approx5.16$). Then change `genlikler = [0.25, 0.7, 1.3]`
-   in `s06_denge.py` to `[0.25, 0.5, 0.75]` and render with `-ql`. Do the
-   plateaus disappear? Is the separation now a genuine phase shift?
+1. **Reproduce the bug.** Set `genlikler` in `s06_denge.py` to
+   `[0.25, 0.7, 1.3]` and render with `-ql` to see the flat plateaus. Then try
+   `[0.25, 0.7, 0.78]`, just below the threshold: how much longer does the
+   period get? Afterwards run `git restore 01-manim/`.
 2. **Play with the tolerance.** In `s01_artan_derece.py` use `tolerans=0.005`
    instead of `iyi_bolge(N, tolerans=0.05)`. How far does the region at
    $N=15$ shrink from $6.1$?
