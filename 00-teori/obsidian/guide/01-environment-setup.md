@@ -27,7 +27,7 @@ block. What each layer needs:
 > [!note] Verification record
 > The Windows commands below were run on Windows 11 + Python 3.13.7. The
 > Linux commands were run on Fedora 44, according to the repository's own
-> records (README "Doğrulama durumu", `ENVANTER.md`). Anything not run is
+> records (README "Doğrulama durumu", `RAPOR.md`). Anything not run is
 > marked **(not tested)**.
 
 ---
@@ -78,7 +78,7 @@ python 02-python/src/taylor.py
 
 > [!warning] About the `grep -v` line
 > `requirements.txt` contains `manim==0.19.0`; installing it unchanged into
-> 3.14 fails while building `av` (the error recorded in `ENVANTER.md`). That
+> 3.14 fails while building `av` (`RAPOR.md` §2.3). That
 > is why the README and RAPOR filter manim out. The line is **(not tested)**
 > on Fedora.
 
@@ -294,7 +294,7 @@ cd 04-lean; lake build; cd ..
 
 ## Pitfalls
 
-Sources: `DEVAM.md` §5, `RAPOR.md` §2, `ENVANTER.md`, and the tests run
+Sources: `RAPOR.md` §2, `LEAN-DURUM.md`, and the tests run
 while writing this guide.
 
 1. **manim does not install on Python 3.14.** `av<14` has no cp314 wheel.

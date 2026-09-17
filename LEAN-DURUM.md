@@ -11,7 +11,7 @@
 | Kaç teorem? | 7 |
 | Eksen (axiom) kirliliği var mı? | ❌ yok — hepsi yalnız `propext`, `Classical.choice`, `Quot.sound` |
 
-DEVAM.md §6.6 "her `sorry`'yi tek tek listele" diyordu. **Listelenecek `sorry`
+Plan "her `sorry`'yi tek tek listele" diyordu. **Listelenecek `sorry`
 yok**; bunun sebebi kahramanlık değil, işin baştan böyle kurgulanmış olmasıdır:
 kural "Mathlib'de zaten var olanı kullan, yeniden ispatlama" idi. Buradaki
 teoremlerin hepsi Mathlib'in mevcut sonuçlarının ya doğrudan yeniden ifadesi ya
@@ -91,7 +91,7 @@ kullanır; `cauchy_hadamard` bunun yeniden ifadesidir.
 
 ## Kapsanmayanlar (bilerek)
 
-Bunlar **eksik değil, kapsam dışı**. Yarın devam edilirse buradan seçilebilir:
+Bunlar **eksik değil, kapsam dışı**. Genişletmek isteyen buradan başlayabilir:
 
 1. **"R = en yakın tekilliğe uzaklık"** biçimsel olarak ifade edilmedi.
    `1/(1+z²)` için `R = 1` gibi somut bir örneği Lean'de kurmak, kutupların
@@ -138,8 +138,7 @@ Yani kırık olan tek şey **index adının çözümlenmesiydi**. Çözüm:
    (`git = "https://github.com/leanprover-community/mathlib4.git"`), çünkü
    github.com çözülüyor.
 
-**Sudo gerekmedi, DNS'e dokunulmadı.** DEVAM.md §5'teki `nmcli` ile DNS
-değiştirme adımı artık **gerekli değil** (yine de zararsız).
+**Sudo gerekmedi, DNS'e dokunulmadı.** DNS ayarını değiştirmek gerekmedi.
 
 > Kalıcı bir uyarı: `elan default stable` gibi *index'e giden* komutlar bu ağda
 > hâlâ düşer. Toolchain yükseltmek gerekirse ya yukarıdaki elle kurma yolunu

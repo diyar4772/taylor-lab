@@ -27,7 +27,7 @@ Her katmanın hangi aracı istediği:
 > [!note] Doğrulama kaydı
 > Aşağıdaki Windows komutları Windows 11 + Python 3.13.7 üzerinde,
 > Linux komutları ise deponun kendi kayıtlarına göre (README "Doğrulama
-> durumu", `ENVANTER.md`) Fedora 44 üzerinde çalıştırıldı. Çalıştırılmamış
+> durumu" ve `RAPOR.md`) Fedora 44 üzerinde çalıştırıldı. Çalıştırılmamış
 > bir komut varsa yanında **(denenmedi)** yazar.
 
 ---
@@ -78,7 +78,7 @@ python 02-python/src/taylor.py
 
 > [!warning] `grep -v` satırı hakkında
 > `requirements.txt` içinde `manim==0.19.0` var; olduğu gibi 3.14'e kurmaya
-> çalışmak `av` derlemesinde düşer (`ENVANTER.md`'deki hata). README ve RAPOR
+> çalışmak `av` derlemesinde düşer (`RAPOR.md` §2.3). README ve RAPOR
 > bu yüzden manim'i ayıklayan satırı kullanır. Satır Fedora'da **(denenmedi)**.
 
 Defteri açmak için (`jupyterlab` requirements'ta var):
@@ -293,7 +293,7 @@ cd 04-lean; lake build; cd ..
 
 ## Tuzaklar
 
-Kaynak: `DEVAM.md` §5, `RAPOR.md` §2, `ENVANTER.md` ve bu kılavuz
+Kaynak: `RAPOR.md` §2, `LEAN-DURUM.md` ve bu kılavuz
 yazılırken yapılan denemeler.
 
 1. **manim, Python 3.14'e kurulmaz.** `av<14`'ün cp314 tekerleği yok. Manim'i

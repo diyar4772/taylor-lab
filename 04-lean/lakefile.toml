@@ -2,7 +2,7 @@ name = "taylorlab"
 defaultTargets = ["TaylorLab"]
 
 # Mathlib, Reservoir yerine doğrudan git ile isteniyor: bu makinedeki ISS
-# çözümleyicisi bazı lean-lang.org alt adlarını çözemiyor (ENVANTER.md'ye bak),
+# çözümleyicisi bazı lean-lang.org alt adlarını çözemiyor (LEAN-DURUM.md'ye bak),
 # github.com ise sorunsuz çözülüyor.
 [[require]]
 name = "mathlib"

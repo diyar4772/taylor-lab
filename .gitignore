@@ -42,15 +42,13 @@ desktop.ini
 00-teori/*.pdf
 
 # MATLAB bu makinede açılışta çöküyor ve çalıştırıldığı dizine
-# crash dump bırakıyor (ENVANTER.md "MATLAB durumu" bölümü).
+# crash dump bırakıyor (RAPOR.md §2.1).
 matlab_crash_dump.*
 
-# NOT: DEVAM.md bilerek İZLENİYOR, yoksayılmıyor.
-# Bir kez denendi ama kural ölüydü: .gitignore yalnızca izlenmeyen
-# dosyaları etkiler, DEVAM.md ise 491076d'den beri depoda. Gerçekten
-# çıkarmak istenirse:
-#     git rm --cached DEVAM.md
-# ve geçmişten de silmek için ayrıca git-filter-repo gerekir.
+# Geliştirme sırasında tutulan çalışma notları (oturum devri, iş
+# kuyruğu, makine envanteri). Kullanıcıya yönelik değiller; yerelde kalırlar.
+DEVAM.md
+ENVANTER.md
 
 # Obsidian kasası için yerel kopya (depodan üretilir, GitHub'a gitmez)
 Taylor Series/

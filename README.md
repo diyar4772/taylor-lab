@@ -380,8 +380,8 @@ her iki platformda da aynı çıktı.
 
 | Dosya | İçerik |
 |---|---|
-| `DEVAM.md` | Projenin güncel durumu, ortam kurulumu ve bilinen tuzaklar. |
-| `ENVANTER.md` | Windows ve Fedora makinelerinin araç envanteri; neyin gerçekten çalıştırıldığı. |
+| `00-teori/obsidian/kilavuz/` | Öğrenme kılavuzu (Obsidian): kurulum ve tuzaklar, 10 oturumluk çalışma planı, katman notları. Başlangıç: `00-BASLA-BURADAN.md`. |
+| `00-teori/obsidian/guide/` | The same guide in English. Start: `00-START-HERE.md`. |
 | `RAPOR.md` | Ne çalıştı, ne çalışmadı, hangi araç yoktu; bulunan ve düzeltilen sekiz gerçek hata. |
 | `LEAN-DURUM.md` | Biçimsel katmanın durumu: 7 teorem, 0 `sorry`, kapsam dışı bırakılan 4 konu. |
 | `out/taylor-teori.pdf` | Teorik metnin derlenmiş hâli (8 sayfa). |

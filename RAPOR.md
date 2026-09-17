@@ -7,7 +7,7 @@ ise neyin neden yapılamadığını söyler.
 
 - **Makine:** Fedora Linux 44, KDE Plasma 6.7.5, x86_64, glibc 2.43, GCC 16.2.1
 - **Tarih:** 2026-09-17
-- **Önceki makine:** Windows 11 Home, Python 3.13.7 (geçiş notları `ENVANTER.md`'de)
+- **Önceki makine:** Windows 11 Home, Python 3.13.7 
 
 ---
 
@@ -178,7 +178,7 @@ kısayollar kalkar.
 `hyperref` bölüm başlıklarındaki matematiği PDF yer imine çeviremiyordu.
 `[unicode]` seçeneği ve `\texorpdfstring` ile giderildi.
 
-> **Kendi hatam:** bunu ilk raporlarken "0 uyarı" demiştim; oysa yalnızca
+> **Not:** bu ilk raporlanırken "0 uyarı" demiştim; oysa yalnızca
 > `LaTeX Warning` satırlarını taramıştım, `Package … Warning` satırlarını
 > değil. Uyarılar oradaydı. Şimdi **her türde uyarı 0**.
 
@@ -324,4 +324,5 @@ godot --headless --path 05-godot --script res://test_dogrulama.gd
 node 06-web/test_matematik.mjs
 ```
 
-Sistem gereksinimleri ve tuzaklar: `ENVANTER.md` ve `DEVAM.md` §5.
+Sistem gereksinimleri ve tuzaklar: `00-teori/obsidian/kilavuz/01-ortam-kurulumu.md`
+(İngilizcesi: `00-teori/obsidian/guide/01-environment-setup.md`).
