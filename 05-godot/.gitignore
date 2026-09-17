@@ -1,0 +1,7 @@
+# Godot düzenleyici önbelleği — içe aktarılmış varlıklar, gölgelendirici
+# önbelleği, düzenleyici düzeni. Hepsi yeniden üretilebilir.
+.godot/
+# Dışa aktarım çıktıları
+build/
+*.pck
+*.zip

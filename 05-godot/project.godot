@@ -1,0 +1,32 @@
+; Taylor Laboratuvarı — Godot katmanı
+; Motor: Godot 4.7.2.stable (Fedora 44, dnf paketi)
+;
+; İki sahne var ve ikisi de aynı fikrin farklı yüzü:
+;   taylor_explorer.tscn — Taylor polinomu bir eğriyi nerede bırakır?
+;   denge_oyunu.tscn     — kararlı denge neden HER ZAMAN harmonik osilatördür?
+;
+; Sayısal sabitler 02-python/src/ ve 01-manim/scenes/s06_denge.py ile
+; bilerek birebir aynıdır; testler/test_kendini.gd bunu doğrular.
+
+config_version=5
+
+[application]
+
+config/name="Taylor Laboratuvari - Godot katmani"
+config/description="Taylor serisinin nerede çalıştığını ve nerede bıraktığını elle kurcalanabilir hâle getiren iki sahne."
+run/main_scene="res://taylor_explorer.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=1600
+window/size/viewport_height=900
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+anti_aliasing/quality/msaa_2d=2
