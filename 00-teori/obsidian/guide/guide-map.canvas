@@ -1,0 +1,333 @@
+{
+ "nodes": [
+  {
+   "id": "moc",
+   "type": "file",
+   "file": "00-teori/obsidian/guide/00-START-HERE.md",
+   "x": -900,
+   "y": 300,
+   "width": 320,
+   "height": 160,
+   "color": "6"
+  },
+  {
+   "id": "plan",
+   "type": "file",
+   "file": "00-teori/obsidian/guide/02-study-plan.md",
+   "x": -500,
+   "y": 300,
+   "width": 320,
+   "height": 160,
+   "color": "4"
+  },
+  {
+   "id": "gK",
+   "type": "group",
+   "label": "Seven layers",
+   "x": -100,
+   "y": -80,
+   "width": 380,
+   "height": 1000,
+   "color": "5"
+  },
+  {
+   "id": "k0",
+   "type": "file",
+   "file": "00-teori/obsidian/guide/05-layer-theory-latex.md",
+   "x": -60,
+   "y": -40,
+   "width": 300,
+   "height": 110
+  },
+  {
+   "id": "k1",
+   "type": "file",
+   "file": "00-teori/obsidian/guide/04-layer-manim.md",
+   "x": -60,
+   "y": 95,
+   "width": 300,
+   "height": 110
+  },
+  {
+   "id": "k2",
+   "type": "file",
+   "file": "00-teori/obsidian/guide/09-layer-web.md",
+   "x": -60,
+   "y": 230,
+   "width": 300,
+   "height": 110
+  },
+  {
+   "id": "k3",
+   "type": "file",
+   "file": "00-teori/obsidian/guide/03-layer-python.md",
+   "x": -60,
+   "y": 365,
+   "width": 300,
+   "height": 110
+  },
+  {
+   "id": "k4",
+   "type": "file",
+   "file": "00-teori/obsidian/guide/06-layer-octave.md",
+   "x": -60,
+   "y": 500,
+   "width": 300,
+   "height": 110
+  },
+  {
+   "id": "k5",
+   "type": "file",
+   "file": "00-teori/obsidian/guide/08-layer-godot.md",
+   "x": -60,
+   "y": 635,
+   "width": 300,
+   "height": 110
+  },
+  {
+   "id": "k6",
+   "type": "file",
+   "file": "00-teori/obsidian/guide/07-layer-lean.md",
+   "x": -60,
+   "y": 770,
+   "width": 300,
+   "height": 110
+  },
+  {
+   "id": "gS",
+   "type": "group",
+   "label": "Results",
+   "x": 400,
+   "y": 120,
+   "width": 380,
+   "height": 560,
+   "color": "2"
+  },
+  {
+   "id": "sonuc",
+   "type": "file",
+   "file": "00-teori/obsidian/guide/10-seven-results.md",
+   "x": 440,
+   "y": 160,
+   "width": 300,
+   "height": 220,
+   "color": "2"
+  },
+  {
+   "id": "eksik",
+   "type": "file",
+   "file": "00-teori/obsidian/guide/12-gaps-and-next-steps.md",
+   "x": 440,
+   "y": 420,
+   "width": 300,
+   "height": 220,
+   "color": "1"
+  },
+  {
+   "id": "gC",
+   "type": "group",
+   "label": "Concepts (atomic notes, Turkish)",
+   "x": 900,
+   "y": -80,
+   "width": 420,
+   "height": 1000,
+   "color": "3"
+  },
+  {
+   "id": "kavram",
+   "type": "file",
+   "file": "00-teori/obsidian/guide/11-concept-map.md",
+   "x": 940,
+   "y": -40,
+   "width": 340,
+   "height": 160,
+   "color": "3"
+  },
+  {
+   "id": "a0",
+   "type": "file",
+   "file": "00-teori/obsidian/Taylor açılımı bir tanım değil zorunluluktur.md",
+   "x": 940,
+   "y": 160,
+   "width": 340,
+   "height": 160
+  },
+  {
+   "id": "a1",
+   "type": "file",
+   "file": "00-teori/obsidian/Yakınsaklık yarıçapı kompleks düzlemde belirlenir.md",
+   "x": 940,
+   "y": 345,
+   "width": 340,
+   "height": 160
+  },
+  {
+   "id": "a2",
+   "type": "file",
+   "file": "00-teori/obsidian/Pürüzsüz olmak analitik olmak değildir.md",
+   "x": 940,
+   "y": 530,
+   "width": 340,
+   "height": 160
+  },
+  {
+   "id": "a3",
+   "type": "file",
+   "file": "00-teori/obsidian/Her kararlı denge harmonik osilatördür.md",
+   "x": 940,
+   "y": 715,
+   "width": 340,
+   "height": 160
+  }
+ ],
+ "edges": [
+  {
+   "id": "e0",
+   "fromNode": "plan",
+   "fromSide": "right",
+   "toNode": "k0",
+   "toSide": "left"
+  },
+  {
+   "id": "e1",
+   "fromNode": "plan",
+   "fromSide": "right",
+   "toNode": "k1",
+   "toSide": "left"
+  },
+  {
+   "id": "e2",
+   "fromNode": "plan",
+   "fromSide": "right",
+   "toNode": "k2",
+   "toSide": "left"
+  },
+  {
+   "id": "e3",
+   "fromNode": "plan",
+   "fromSide": "right",
+   "toNode": "k3",
+   "toSide": "left"
+  },
+  {
+   "id": "e4",
+   "fromNode": "plan",
+   "fromSide": "right",
+   "toNode": "k4",
+   "toSide": "left"
+  },
+  {
+   "id": "e5",
+   "fromNode": "plan",
+   "fromSide": "right",
+   "toNode": "k5",
+   "toSide": "left"
+  },
+  {
+   "id": "e6",
+   "fromNode": "plan",
+   "fromSide": "right",
+   "toNode": "k6",
+   "toSide": "left"
+  },
+  {
+   "id": "e7",
+   "fromNode": "kavram",
+   "fromSide": "bottom",
+   "toNode": "a0",
+   "toSide": "top"
+  },
+  {
+   "id": "e8",
+   "fromNode": "moc",
+   "fromSide": "right",
+   "toNode": "plan",
+   "toSide": "left"
+  },
+  {
+   "id": "e9",
+   "fromNode": "k0",
+   "fromSide": "right",
+   "toNode": "sonuc",
+   "toSide": "left"
+  },
+  {
+   "id": "e10",
+   "fromNode": "k1",
+   "fromSide": "right",
+   "toNode": "sonuc",
+   "toSide": "left"
+  },
+  {
+   "id": "e11",
+   "fromNode": "k2",
+   "fromSide": "right",
+   "toNode": "sonuc",
+   "toSide": "left"
+  },
+  {
+   "id": "e12",
+   "fromNode": "k3",
+   "fromSide": "right",
+   "toNode": "sonuc",
+   "toSide": "left"
+  },
+  {
+   "id": "e13",
+   "fromNode": "k4",
+   "fromSide": "right",
+   "toNode": "sonuc",
+   "toSide": "left"
+  },
+  {
+   "id": "e14",
+   "fromNode": "k5",
+   "fromSide": "right",
+   "toNode": "sonuc",
+   "toSide": "left"
+  },
+  {
+   "id": "e15",
+   "fromNode": "k6",
+   "fromSide": "right",
+   "toNode": "sonuc",
+   "toSide": "left"
+  },
+  {
+   "id": "e16",
+   "fromNode": "sonuc",
+   "fromSide": "right",
+   "toNode": "kavram",
+   "toSide": "left",
+   "label": "concepts"
+  },
+  {
+   "id": "e17",
+   "fromNode": "sonuc",
+   "fromSide": "bottom",
+   "toNode": "eksik",
+   "toSide": "top"
+  },
+  {
+   "id": "e18",
+   "fromNode": "a0",
+   "fromSide": "bottom",
+   "toNode": "a1",
+   "toSide": "top"
+  },
+  {
+   "id": "e19",
+   "fromNode": "a1",
+   "fromSide": "bottom",
+   "toNode": "a2",
+   "toSide": "top"
+  },
+  {
+   "id": "e20",
+   "fromNode": "a2",
+   "fromSide": "bottom",
+   "toNode": "a3",
+   "toSide": "top"
+  }
+ ]
+}
