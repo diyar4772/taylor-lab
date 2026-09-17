@@ -51,3 +51,6 @@ matlab_crash_dump.*
 # çıkarmak istenirse:
 #     git rm --cached DEVAM.md
 # ve geçmişten de silmek için ayrıca git-filter-repo gerekir.
+
+# Obsidian kasası için yerel kopya (depodan üretilir, GitHub'a gitmez)
+Taylor Series/
