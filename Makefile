@@ -1,11 +1,14 @@
 # Taylor Laboratuvarı — derleme hedefleri
 #
-# DURUM: Bu Makefile bu makinede ÇALIŞTIRILMADI; `make` kurulu değil.
-#        Windows'ta kurmak için:  winget install ezwinports.make
-#        (veya GnuWin32.Make). Aynı işleri yapan ve bu makinede gerçekten
-#        test edilen PowerShell muadili için: ./yap.ps1 <hedef>
+# DURUM: `make` bu makinede kurulu (GNU Make, /usr/bin/make). Çalıştırılan
+#        hedefler: `make dogrula` (8/8 geçti) ve onun içinden `make teori`.
+#        `python`, `manim`, `octave`, `lean`, `all` hedefleri make üzerinden
+#        tek tek çalıştırılmadı — altlarındaki komutlar `dogrula.sh` içinde
+#        doğrudan koşturuluyor.
+#        Windows tarafındaki PowerShell muadili: ./yap.ps1 <hedef>
 #
-# Hedefler:  make python | make manim | make teori | make octave | make lean
+# Hedefler:  make dogrula | make dogrula-hizli
+#            make python | make manim | make teori | make octave | make lean
 #            make web | make all | make clean
 
 PY      ?= python
@@ -16,9 +19,22 @@ QUALITY ?= -qh          # 1920x1080 @ 60fps
 SCENES  := ArtanDereceSahnesi TuretmeSahnesi KalanTerimiSahnesi \
            KompleksYaricapSahnesi AnalitikDegilSahnesi DengeSahnesi
 
-.PHONY: all python manim teori octave lean web clean
+.PHONY: all python manim teori octave lean web dogrula dogrula-hizli clean
 
 all: python manim teori web
+
+## Tek komutluk doğrulama: her katmanın kendi testini sırayla çalıştırır,
+## her biri için GEÇTİ / KALDI / ATLANDI basar, sonunda özet verir.
+## Bir katman bile KALDI ise çıkış kodu 1 döner.
+##
+## ATLANDI, KALDI değildir: bu makinede kurulu olmayan bir aracın katmanı
+## atlanır ve özette ayrıca listelenir.
+dogrula:
+	bash dogrula.sh
+
+## Aynısı, ama Lean'i atlar (lake build uzun sürebilir)
+dogrula-hizli:
+	bash dogrula.sh --hizli
 
 ## Sayısal laboratuvar: tüm betikleri sırayla çalıştırır, out/ altını doldurur
 python:

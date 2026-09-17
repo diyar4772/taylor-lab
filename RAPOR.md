@@ -21,7 +21,7 @@ ise neyin neden yapılamadığını söyler.
 | `02-python/` | 7 betik | ✅ | `taylor.py` ve `kalan_dogrulama.py` koşturuldu |
 | `03-matlab-octave/` | 5 `.m` | ⚠️ kısmi | Octave 10.3.0'da koştu; **MATLAB'da denenemedi** |
 | `04-lean/` | 4 `.lean` | ✅ | `lake build` 2777 iş, **0 `sorry`** |
-| `05-godot/` | 2 sahne | ⚠️ kısmi | Mantık ve yükleme doğrulandı; **görüntüsü doğrulanmadı** |
+| `05-godot/` | 2 sahne | ✅ | Matematik 30/30, headless yükleme, **ve pencerede gözle doğrulandı** |
 | `06-web/` | 1 `.html` | ✅ | 34 birim testi + Chrome'da 3 panel, konsol hatası yok |
 
 ### Çalıştırılan komutlar ve sonuçları
@@ -38,6 +38,7 @@ ise neyin neden yapılamadığını söyler.
 | `#print axioms` × 7 teorem | ✅ yalnız `propext`, `Classical.choice`, `Quot.sound` |
 | `godot --headless --script res://test_dogrulama.gd` | ✅ **30/30** kontrol |
 | `godot --headless --quit-after 90` (iki sahne) | ✅ ikisi de hatasız |
+| `godot --path 05-godot` (pencerede, iki sahne) | ✅ eğriler çiziliyor; sarkaçlar sallanıyor, 150°'de eşik aşılıyor |
 | `node 06-web/test_matematik.mjs` | ✅ **34/34** kontrol |
 | `06-web/index.html` Chrome'da | ✅ 3 panel çalıştı, konsol hatası yok |
 
@@ -76,19 +77,7 @@ denetlendi: yorumlar ve metin sabitleri ayıklandıktan sonra Octave'a özgü ya
 metin) bulunmadı ve her dosyada ana fonksiyon adı dosya adıyla aynı.
 **Bu bir söz değildir; MATLAB'da çalıştıkları gösterilemedi.**
 
-### 2.2 Godot sahnelerinin görüntüsü doğrulanmadı
-
-`test_dogrulama.gd` sahnelerin **matematiğini** 30 kontrolle doğruluyor ve iki
-sahne de headless olarak 90 kare hatasız koşuyor. Ama `--headless` çizim
-yapmaz. Pencere açıp ekran görüntüsü alma adımı kullanıcı tarafından
-durduruldu, dolayısıyla **sahnelerin nasıl göründüğü doğrulanmadı.**
-Elle açıp bakmak gerekir:
-
-```bash
-godot --path 05-godot
-```
-
-### 2.3 Manim: 6 sahnenin 5'i Fedora'da yeniden üretilmedi
+### 2.2 Manim: 6 sahnenin 5'i Fedora'da yeniden üretilmedi
 
 1. sahne `-qh` ile yeniden render edildi ve Windows çıktısıyla **birebir aynı**
    süreyi/çözünürlüğü/kare hızını verdi (25,25 sn · 1920×1080 · 60 fps). Bu,
@@ -99,7 +88,7 @@ godot --path 05-godot
 PATH="$PWD/.venv313/bin:$PATH" bash 01-manim/render.sh
 ```
 
-### 2.4 Manim, sistem Python'ıyla kurulamadı
+### 2.3 Manim, sistem Python'ıyla kurulamadı
 
 Fedora 44'ün Python'ı 3.14.7. `manim==0.19.0`, `av>=9,<14` istiyor; PyPI'da
 Python 3.14 için en eski `av` tekerleği 15.1.0. pip kaynaktan derlemeye düşüyor
@@ -115,7 +104,7 @@ ortam var** ve karıştırılmamalıdır:
 | `.venv/` | 3.14.7 | bütün sayısal betikler |
 | `.venv313/` | 3.13.15 | **yalnızca** manim |
 
-### 2.5 Lean: DNS engeli vardı, aşıldı
+### 2.4 Lean: DNS engeli vardı, aşıldı
 
 Windows'ta `elan default stable` `Could not resolve host: release.lean-lang.org`
 ile düşüyordu. **Fedora'da da aynen tekrarlandı.** Ama teşhis bir adım ileri
@@ -298,6 +287,17 @@ Bunlar eksik değil, kapsam dışı:
 ---
 
 ## 7. Yeniden üretme
+
+Bu raporun bütün "geçti" iddiaları **tek komutla** yeniden sınanabilir:
+
+```bash
+make dogrula           # bütün katmanlar; biri bile kalırsa çıkış kodu 1
+make dogrula-hizli     # Lean'i atlar (uzun süren adım)
+```
+
+Bu makinede son çalıştırma: **8/8 GEÇTİ, 0 KALDI, 0 ATLANDI, 19 sn.**
+
+Katmanları ayrı ayrı kurmak ve çalıştırmak için:
 
 ```bash
 # ortam

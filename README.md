@@ -253,6 +253,19 @@ Manim'i **kendi** ortamında çalıştırın:
 PATH="$PWD/.venv313/bin:$PATH" bash 01-manim/render.sh 1
 ```
 
+### Hepsini tek komutla doğrulama
+
+```bash
+make dogrula            # her katmanın testi sırayla; sonunda özet
+make dogrula-hizli      # aynısı, Lean atlanır (lake build uzun sürebilir)
+```
+
+Her katman için `GEÇTİ` / `KALDI` / `ATLANDI` basar ve bir katman bile
+kalırsa çıkış kodu 1 döner. `ATLANDI`, `KALDI` değildir: bu makinede kurulu
+olmayan bir aracın katmanı atlanır ve özette ayrıca listelenir — kurulu
+olmayan bir araç yüzünden "kaldı" demek, çalıştırılmamış bir şey hakkında
+hüküm vermek olurdu.
+
 ### Katman katman çalıştırma
 
 ```bash
@@ -310,7 +323,7 @@ Aşağıdaki tablo bu makinede (Fedora Linux 44, x86_64, glibc 2.43) fiilen
 | Web arayüz | Chrome'da `06-web/index.html` | Geçti — üç panelin üçü de çalıştı, konsol hatası yok |
 | Godot (matematik) | `godot --headless --script res://test_dogrulama.gd` | Geçti — **30/30** kontrol; katsayılar ve sarkaç periyotları Python katmanıyla aynı |
 | Godot (sahne yükleme) | `godot --headless --quit-after 90` × 2 sahne | Geçti — ikisi de 90 kare hatasız koştu |
-| Godot (görüntü) | — | **Doğrulanmadı** — `--headless` çizim yapmaz; sahnelerin nasıl göründüğü gözle denetlenmedi |
+| Godot (görüntü) | `godot --path 05-godot` — iki sahne de pencerede açıldı | Geçti — 1. sahnede eğriler çiziliyor; 2. sahnede iki sarkaç da sallanıyor ve 150° genlikte faz farkı çubuğu kırmızıya dönüyor |
 
 ### MATLAB hakkında açık kayıt
 
@@ -346,3 +359,12 @@ her iki platformda da aynı çıktı.
 | `RAPOR.md` | Ne çalıştı, ne çalışmadı, hangi araç yoktu; bulunan ve düzeltilen sekiz gerçek hata. |
 | `LEAN-DURUM.md` | Biçimsel katmanın durumu: 7 teorem, 0 `sorry`, kapsam dışı bırakılan 4 konu. |
 | `out/taylor-teori.pdf` | Teorik metnin derlenmiş hâli (8 sayfa). |
+
+---
+
+## Lisans
+
+MIT Lisansı — Telif hakkı (c) 2026 Samed Yolcu. Tam metin: [`LICENSE`](LICENSE).
+
+Kod, metin, tablo ve görseller serbestçe kullanılabilir, değiştirilebilir ve
+dağıtılabilir; tek şart telif ve lisans bildiriminin korunmasıdır.
