@@ -1,5 +1,7 @@
 # Taylor Laboratuvarı
 
+*[For the English version: **[README.en.md](README.en.md)**]*
+
 Taylor serisi bir hesap tekniği değildir. Bir fonksiyonun bir nokta
 civarındaki davranışının **tam muhasebesidir**: serinin her terimi bir
 bilgi taşır, kesme işlemiyle atılan her terimin faturası da mutlaka bir
