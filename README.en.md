@@ -359,10 +359,10 @@ The source is Turkish. These are the identifiers you will actually meet:
 | `dogrula` | verify |
 | `teori`, `gecis` | theory, pass (as in compiler pass) |
 
-Documents: [`RAPOR.md`](RAPOR.md) is the honesty report (what worked, what did
-not, the eight real bugs found and fixed); [`LEAN-DURUM.md`](LEAN-DURUM.md)
-covers the formal layer; [`ENVANTER.md`](ENVANTER.md) is the tool inventory of
-both machines; [`DEVAM.md`](DEVAM.md) is the working-state note.
+Documents: [`RAPOR.md`](RAPOR.md) is the honesty report — what worked, what did
+not, which tools were missing, and the eight real bugs found and fixed along
+the way. [`LEAN-DURUM.md`](LEAN-DURUM.md) covers the formal layer: the seven
+theorems, the axiom audit, and the four topics deliberately left out of scope.
 
 ---
 
